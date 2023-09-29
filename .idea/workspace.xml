@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1c2364b5-5b3a-4b59-b1fb-45c81f63ad85" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Q6fDdLTJ4PfkfnMz6eNFpRfR9m" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1c2364b5-5b3a-4b59-b1fb-45c81f63ad85" name="Changes" comment="" />
+      <created>1684678833636</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1684678833636</updated>
+      <workItem from="1684678834841" duration="2432000" />
+      <workItem from="1687937483387" duration="71000" />
+      <workItem from="1687938448456" duration="570000" />
+      <workItem from="1688016789079" duration="387000" />
+      <workItem from="1688369455555" duration="327000" />
+      <workItem from="1688449944360" duration="690000" />
+      <workItem from="1688543776134" duration="6738000" />
+      <workItem from="1688569217318" duration="2669000" />
+      <workItem from="1688600544023" duration="6122000" />
+      <workItem from="1688608960749" duration="3588000" />
+      <workItem from="1688623880893" duration="12493000" />
+      <workItem from="1688909609455" duration="4700000" />
+      <workItem from="1688914424926" duration="346000" />
+      <workItem from="1688957763848" duration="971000" />
+      <workItem from="1688958768073" duration="8176000" />
+      <workItem from="1689047497180" duration="520000" />
+      <workItem from="1689056897964" duration="13126000" />
+      <workItem from="1689081493835" duration="11998000" />
+      <workItem from="1689145041167" duration="2743000" />
+      <workItem from="1689153703332" duration="102000" />
+      <workItem from="1689227729893" duration="13557000" />
+      <workItem from="1689241634402" duration="34000" />
+      <workItem from="1689342544461" duration="3233000" />
+      <workItem from="1689346346726" duration="711000" />
+      <workItem from="1689819155835" duration="8727000" />
+      <workItem from="1689831390529" duration="12535000" />
+      <workItem from="1689845772504" duration="781000" />
+      <workItem from="1689853587069" duration="377000" />
+      <workItem from="1689920125190" duration="164000" />
+      <workItem from="1689943494139" duration="6279000" />
+      <workItem from="1689954912757" duration="20000" />
+      <workItem from="1689954990369" duration="1063000" />
+      <workItem from="1690120513212" duration="5525000" />
+      <workItem from="1690275154884" duration="8867000" />
+      <workItem from="1690295585676" duration="220000" />
+      <workItem from="1690351817124" duration="5882000" />
+      <workItem from="1691476498319" duration="3935000" />
+      <workItem from="1692941110317" duration="3612000" />
+      <workItem from="1692946960752" duration="539000" />
+      <workItem from="1692948181341" duration="2055000" />
+      <workItem from="1693049610981" duration="665000" />
+      <workItem from="1693211647914" duration="33000" />
+      <workItem from="1693376760072" duration="1754000" />
+      <workItem from="1693989498867" duration="37000" />
+      <workItem from="1694154007130" duration="920000" />
+      <workItem from="1694164624496" duration="78000" />
+      <workItem from="1694237193559" duration="8546000" />
+      <workItem from="1694418181458" duration="3399000" />
+      <workItem from="1694422897351" duration="557000" />
+      <workItem from="1694425582010" duration="2895000" />
+      <workItem from="1694488357543" duration="674000" />
+      <workItem from="1694489151424" duration="3260000" />
+      <workItem from="1694500778267" duration="219000" />
+      <workItem from="1694501010257" duration="7116000" />
+      <workItem from="1694575633306" duration="4319000" />
+      <workItem from="1694704471019" duration="1000" />
+      <workItem from="1694750354102" duration="1006000" />
+      <workItem from="1694752287349" duration="844000" />
+      <workItem from="1694755183359" duration="1324000" />
+      <workItem from="1694766302090" duration="80000" />
+      <workItem from="1694953931390" duration="278000" />
+      <workItem from="1694962514277" duration="3255000" />
+      <workItem from="1695008186121" duration="9737000" />
+      <workItem from="1695090117692" duration="7000" />
+      <workItem from="1695090243272" duration="10000" />
+      <workItem from="1695090412479" duration="38000" />
+      <workItem from="1695093342706" duration="36000" />
+      <workItem from="1695098536037" duration="343000" />
+      <workItem from="1695106173970" duration="8800000" />
+      <workItem from="1695138784664" duration="12732000" />
+      <workItem from="1695178497452" duration="8200000" />
+      <workItem from="1695187502472" duration="3007000" />
+      <workItem from="1695193886021" duration="6489000" />
+      <workItem from="1695208257649" duration="19355000" />
+      <workItem from="1695263344149" duration="8901000" />
+      <workItem from="1695283970876" duration="282000" />
+      <workItem from="1695316247414" duration="8327000" />
+      <workItem from="1695344866069" duration="2170000" />
+      <workItem from="1695360096453" duration="4152000" />
+      <workItem from="1695476549142" duration="4909000" />
+      <workItem from="1695494633562" duration="4202000" />
+      <workItem from="1695532755948" duration="34126000" />
+      <workItem from="1695621503784" duration="5697000" />
+      <workItem from="1695642259189" duration="5575000" />
+      <workItem from="1695654931999" duration="13661000" />
+      <workItem from="1695668789170" duration="57000" />
+      <workItem from="1695668866621" duration="420000" />
+      <workItem from="1695688742570" duration="1525000" />
+      <workItem from="1695696855565" duration="6980000" />
+      <workItem from="1695703934343" duration="12833000" />
+      <workItem from="1695810126670" duration="1300000" />
+      <workItem from="1695820907898" duration="7845000" />
+      <workItem from="1695861115492" duration="2692000" />
+      <workItem from="1695876348109" duration="17339000" />
+      <workItem from="1695965156655" duration="1000" />
+      <workItem from="1695966849972" duration="98000" />
+      <workItem from="1695969748547" duration="156000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/random_forest_regression_py$Kennardstone.coverage" NAME="Kennardstone Coverage Results" MODIFIED="1695012559110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$KMeans.coverage" NAME="KMeans Coverage Results" MODIFIED="1695716547031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/calib_data_py$ve_pho.coverage" NAME="ve_pho Coverage Results" MODIFIED="1695345229149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$PLS_regression.coverage" NAME="PLS regression Coverage Results" MODIFIED="1695550756743" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$linear_regression.coverage" NAME="linear regression Coverage Results" MODIFIED="1695190463669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/giao_dien_nhap_du_lieu_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1688967020087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$linear_regression.coverage" NAME="linear regression Coverage Results" MODIFIED="1695187305111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$luachonbuocsong.coverage" NAME="luachonbuocsong Coverage Results" MODIFIED="1695550786702" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1695188235640" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/random_forest_regression_py$linear_regression.coverage" NAME="linear regression Coverage Results" MODIFIED="1695019970970" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$write_data_test.coverage" NAME="write data test Coverage Results" MODIFIED="1688623967539" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Luan_Van_Tot_Nghiep$data_excel.coverage" NAME="data_excel Coverage Results" MODIFIED="1688369727856" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/random_forest_regression_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695017527586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695896257989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/note_train_test_py$note_train_test.coverage" NAME="note train test Coverage Results" MODIFIED="1694755932818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PLS_regression_py$calib_data.coverage" NAME="calib_data Coverage Results" MODIFIED="1695111804205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1694418551610" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$calib_data.coverage" NAME="calib_data Coverage Results" MODIFIED="1689094047249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$PLS_regression.coverage" NAME="PLS regression Coverage Results" MODIFIED="1695187323327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1690357227526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$Kennardstone.coverage" NAME="Kennardstone Coverage Results" MODIFIED="1694965705496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/giao_dien_nhap_du_lieu_py$giao_dien_nhap_du_lieu.coverage" NAME="giao dien nhap du lieu Coverage Results" MODIFIED="1688966656249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ve_pho_py$ve_pho.coverage" NAME="ve_pho Coverage Results" MODIFIED="1694164646153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$ve_pho.coverage" NAME="ve_pho Coverage Results" MODIFIED="1694246684889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/calib_data_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1695346433281" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$random_forest_regression.coverage" NAME="random forest regression Coverage Results" MODIFIED="1695190514589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$ve_pho.coverage" NAME="ve_pho Coverage Results" MODIFIED="1695703354363" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/calib_data_py$calib_data.coverage" NAME="calib_data Coverage Results" MODIFIED="1695344900482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$Do_lech_chuan.coverage" NAME="Do lech chuan Coverage Results" MODIFIED="1694246149283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_2_py$PLS_regression.coverage" NAME="PLS regression Coverage Results" MODIFIED="1695211213691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$random_forest_regression.coverage" NAME="random forest regression Coverage Results" MODIFIED="1695550937821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$ve_pho.coverage" NAME="ve_pho Coverage Results" MODIFIED="1694421296556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$luachonbuocsong.coverage" NAME="luachonbuocsong Coverage Results" MODIFIED="1695187171523" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/random_forest_regression_py$PLSR.coverage" NAME="PLSR Coverage Results" MODIFIED="1695019959548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$calib_data.coverage" NAME="calib_data Coverage Results" MODIFIED="1695323671672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$ve_pho.coverage" NAME="ve_pho Coverage Results" MODIFIED="1689345421633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1695895497715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$Doctests_in_write_data_test.coverage" NAME="Doctests in write data test Coverage Results" MODIFIED="1688602580536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$Train_Test_Split.coverage" NAME="Train Test Split Coverage Results" MODIFIED="1689346862278" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_2_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1695227828896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$threatingpython.coverage" NAME="threatingpython Coverage Results" MODIFIED="1695181004169" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python/CUSTOMDATA" />
+    <SUITE FILE_PATH="coverage/Note_2_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1695213776892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PLS_regression_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695116148052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$linear_regression.coverage" NAME="linear regression Coverage Results" MODIFIED="1695550975535" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_2_py$random_forest_regression.coverage" NAME="random forest regression Coverage Results" MODIFIED="1695213642179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$Train_Test_Split.coverage" NAME="Train Test Split Coverage Results" MODIFIED="1694154548010" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$Do_lech_chuan.coverage" NAME="Do lech chuan Coverage Results" MODIFIED="1694420819912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_2_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695215431325" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$.coverage" NAME=" Coverage Results" MODIFIED="1695186755756" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$data_excel.coverage" NAME="data_excel Coverage Results" MODIFIED="1694418456908" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Full_code_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1695896304608" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_2_py$linear_regression.coverage" NAME="linear regression Coverage Results" MODIFIED="1695227359491" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$PLS_regression.coverage" NAME="PLS regression Coverage Results" MODIFIED="1695190533828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$Train_Test_Split.coverage" NAME="Train Test Split Coverage Results" MODIFIED="1694965726165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1694418759863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/note_train_test_py$Kennardstone.coverage" NAME="Kennardstone Coverage Results" MODIFIED="1694766314798" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/data_excel_py$giao_dien_nhap_du_lieu.coverage" NAME="giao dien nhap du lieu Coverage Results" MODIFIED="1689058946172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/random_forest_regression_py$random_forest_regression.coverage" NAME="random forest regression Coverage Results" MODIFIED="1695019947968" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$random_forest_regression.coverage" NAME="random forest regression Coverage Results" MODIFIED="1695187314221" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1690126086982" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/note_train_test_py$Train_Test_Split.coverage" NAME="Train Test Split Coverage Results" MODIFIED="1694584631287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PLS_regression_py$PLS_regression.coverage" NAME="PLS regression Coverage Results" MODIFIED="1695109904376" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Note_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695182867786" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Train_Test_Split_py$note_train_test.coverage" NAME="note train test Coverage Results" MODIFIED="1694953948074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Luan_Van_Tot_Nghiep$giao_dien_nhap_du_lieu.coverage" NAME="giao dien nhap du lieu Coverage Results" MODIFIED="1688017046135" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
