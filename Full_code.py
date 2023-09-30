@@ -1,8 +1,5 @@
 import math
 import os
-import re
-import time
-
 from kennard_stone import train_test_split
 import pandas as pd
 import numpy as np
@@ -112,9 +109,9 @@ class data_excel:
                 if name[0] == 'e':
                     Number.append(name[1:4])
                     if name[8] == 'A':
-                        Position.append('Segments')
-                    if name[8] == 'B':
                         Position.append('Mid of Segments')
+                    if name[8] == 'B':
+                        Position.append('Mid of 2 Segments')
                     Point.append(name[6:8])
                     Date.append(name[9:19])
                     Brix.append(name[1])
@@ -124,9 +121,9 @@ class data_excel:
                     Cultivar = 'Quyt Duong'
                     Number.append(name[1:4])
                     if name[8] == 'A':
-                        Position.append('Segments')
-                    if name[8] == 'B':
                         Position.append('Mid of Segments')
+                    if name[8] == 'B':
+                        Position.append('Mid of 2 Segments')
                     Point.append(name[6:8])
                     Date.append(name[9:19])
                     Brix.append(name[1])
@@ -800,12 +797,12 @@ if __name__ == "__main__":
     path_save_prepro_spectrum = r'D:\Luan Van\Data\spectrum'
 
     # --------------------------------------EXPORT DATA-----------------------------------------------------------------
-    # data_excel(file_name='New_Demo_Data_270923',
-    #            path_folder_sensor=folder_sensor,
-    #            path_save=path_folder_save,
-    #            path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
-    #                                                     'Point', 'Position', 'Number'],
-    #            Cultivar_name='QD')
+    data_excel(file_name='New_Demo_Data_270923',
+               path_folder_sensor=folder_sensor,
+               path_save=path_folder_save,
+               path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
+                                                        'Point', 'Position', 'Number'],
+               Cultivar_name='QD')
 
     # --------------------------------------FIND BEST WAVES-------------------------------------------------------------
     # data_find_best_waves(n_estimators=100,
