@@ -420,7 +420,7 @@ class data_preprocess:
             scaler_X_train = preprocessing.MinMaxScaler(feature_range=(0, 2))
             self.X_train = scaler_X_train.fit_transform(self.X_train)
             self.X_train = scaler_X_train.inverse_transform(self.X_train)
-            self.X_train = msc(self.X_train)
+            self.X_train_msc = msc(self.X_train)
 
         prepro_X_train()
 
@@ -433,7 +433,7 @@ class data_preprocess:
             scaler_X_test = preprocessing.MinMaxScaler(feature_range=(0, 2))
             self.X_test = scaler_X_test.fit_transform(self.X_test)
             self.X_test = scaler_X_test.inverse_transform(self.X_test)
-            self.X_test = msc(self.X_test)
+            self.X_test_msc = msc(self.X_test)
 
         prepro_X_test()
 
@@ -463,10 +463,10 @@ class data_predict_regression:
     def __init__(self, model_regression, path_file_data, preprocess):
         # tao bien dung chung
         super().__init__()
-        if preprocess == 'pre':
+        if preprocess == 'Prepro':
             self.data_pre_train = pd.read_csv(f'{path_file_data}' + r'\prepro_train' + '.csv')
             self.data_pre_test = pd.read_csv(f'{path_file_data}' + r'\prepro_test' + '.csv')
-        if preprocess == 'non':
+        if preprocess == 'None':
             self.data_pre_train = pd.read_csv(f'{path_file_data}' + r'\non_prepro_train' + '.csv')
             self.data_pre_test = pd.read_csv(f'{path_file_data}' + r'\non_prepro_test' + '.csv')
 
@@ -495,6 +495,7 @@ class data_predict_regression:
             # Evaluate model
             y_train_pred_pls = model_pls.predict(self.X_pre_train)
             y_test_pred_pls = model_pls.predict(self.X_pre_test)
+
             # R, R_Squared, R_MSE
             print('--------------- TRAIN--------------------')
             R_Train_pls = np.corrcoef(self.y_pre_train, y_train_pred_pls, rowvar=False)
@@ -640,7 +641,8 @@ class data_predict_regression:
 
 class data_spectrum:
 
-    def __init__(self, path_file_data, name_folder, name_column, non_prepro, path_spectrum, list_data):
+    def __init__(self, path_file_data, name_file, data_split, name_split_column,
+                 name_column, non_prepro, path_spectrum, list_data, name_value_split, save_or_none):
         # tao bien dung chung
         super().__init__()
 
@@ -685,148 +687,242 @@ class data_spectrum:
             ax.set_ylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
 
         # input column starting waves
-        read_data = pd.read_csv(path_file_data + fr'\{name_folder}.csv', sep=',')
+        read_data = pd.read_csv(path_file_data + fr'\{name_file}.csv', sep=',')
         df = pd.DataFrame(read_data)
-        wavelengths_prepro_spectrum = df.iloc[:0, 12:]
-        full_waves_spectrum = [f'{e}' for e in wavelengths_prepro_spectrum]
-        for check in range(0, len(list_data)):
-            try:
-                list_data_value0 = df[df[f'{name_column}'] == f'{list_data[check]}']
-                list_data_value0 = list_data_value0.iloc[:, 12:]
-                prepro_list_data_value0 = msc(list_data_value0)
-                list_data_value0 = pd.DataFrame(list_data_value0, columns=full_waves_spectrum)
-                prepro_list_data_value0 = pd.DataFrame(prepro_list_data_value0, columns=full_waves_spectrum)
-                list_data_value0.to_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}' + '.csv', index=False,
-                                        header=True)
-                prepro_list_data_value0.to_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}' + '.csv',
-                                               index=False,
-                                               header=True)
-            except:
-                pass
+        df_loc = df[df[f'{name_split_column}'] == f'{name_value_split}']
 
-        print(f'Successful export data non_prepro_spectrum excel to {path_spectrum}')
-
-        # input column starting waves
-        start_col = 1
-        count = 0
-        if non_prepro == 'non':
-
-            fig, Ax = plt.subplots(2, 2, figsize=(14, 7))
-            fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
-            plt.subplots_adjust(left=0.076, right=0.96)
-            fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
-            fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
-            plt.figure(figsize=(10, 7))
-            plt.title('Mean Spectrum', fontsize=19, fontweight='bold')
-
+        if data_split == 'Split':
+            wavelengths_prepro_spectrum = df_loc.iloc[:0, 12:]
+            full_waves_spectrum = [f'{e}' for e in wavelengths_prepro_spectrum]
             for check in range(0, len(list_data)):
                 try:
-                    if check < 2:
-                        # load file
-                        Data_plot = pd.read_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}.csv', sep=',')
-                        Data_plot = pd.DataFrame(Data_plot)
-                        # load plot data
-                        plot(Ax[0, check], Data_plot, start=start_col, title=f'{list_data[check]}')
-                        # load plot mean data
-                        plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
-                    if check >= 2:
-                        # load file
-                        Data_plot = pd.read_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}.csv', sep=',')
-                        Data_plot = pd.DataFrame(Data_plot)
-                        # load plot data
-                        plot(Ax[1, count], Data_plot, start=start_col, title=f'{list_data[check]}')
-                        # load plot mean data
-                        plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
-                        count += 1
+                    list_data_value0 = df_loc[df_loc[f'{name_column}'] == f'{list_data[check]}']
+                    list_data_value0 = list_data_value0.iloc[:, 12:]
+                    prepro_list_data_value0 = msc(list_data_value0)
+                    list_data_value0 = pd.DataFrame(list_data_value0, columns=full_waves_spectrum)
+                    prepro_list_data_value0 = pd.DataFrame(prepro_list_data_value0, columns=full_waves_spectrum)
+                    list_data_value0.to_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}' + '.csv',
+                                            index=False,
+                                            header=True)
+                    prepro_list_data_value0.to_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}' + '.csv',
+                                                   index=False,
+                                                   header=True)
                 except:
-                    print('Not have data', {list_data[check]})
+                    pass
 
-            plt.grid(1)
-            plt.legend()
-            plt.show()
-            # plt.savefig(path_spectrum + r'\non_prepro_spectrum.png')
-            # plt.savefig(path_spectrum + r'\non_prepro_mean_spectrum.png')
+            print(f'Successful export data non_prepro_spectrum excel to {path_spectrum}')
 
-        if non_prepro == 'pre':
+            # input column starting waves
+            start_col = 1
+            count = 0
+            if non_prepro == 'None':
 
-            fig, Ax = plt.subplots(2, 2, figsize=(14, 7))
-            fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
-            plt.subplots_adjust(left=0.076, right=0.96)
-            fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
-            fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
-            plt.figure(figsize=(10, 7))
-            plt.title('Mean Spectrum', fontsize=19, fontweight='bold')
+                fig, Ax = plt.subplots(2, figsize=(14, 7))
+                fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
+                plt.subplots_adjust(left=0.076, right=0.96)
+                fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
+                fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
+                plt.figure(figsize=(10, 7))
+                plt.title('Mean Spectrum', fontsize=19, fontweight='bold')
 
+                for check in range(0, len(list_data)):
+                    try:
+                        if check < 2:
+                            # load file
+                            Data_plot = pd.read_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}.csv',
+                                                    sep=',')
+                            Data_plot = pd.DataFrame(Data_plot)
+                            # load plot data
+                            plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
+                            # load plot mean data
+                            plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
+                    except:
+                        print('Not have data', {list_data[check]})
+
+                plt.grid(1)
+                plt.legend()
+                plt.show()
+                if save_or_none == 'Save':
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\non_prepro_spectrum.png')
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\non_prepro_mean_spectrum.png')
+                if save_or_none == 'None':
+                    pass
+
+            if non_prepro == 'Prepro':
+
+                fig, Ax = plt.subplots(2, figsize=(14, 7))
+                fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
+                plt.subplots_adjust(left=0.076, right=0.96)
+                fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
+                fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
+                plt.figure(figsize=(10, 7))
+                plt.title('Mean Spectrum', fontsize=19, fontweight='bold')
+
+                for check in range(0, len(list_data)):
+                    try:
+                        if check < 2:
+                            # load file
+                            Data_plot = pd.read_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}.csv',
+                                                    sep=',')
+                            Data_plot = pd.DataFrame(Data_plot)
+                            # load plot data
+                            plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
+                            # load plot mean data
+                            plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
+                    except:
+                        print('Not have data', {list_data[check]})
+
+                plt.legend()
+                plt.grid(1)
+                plt.show()
+                if save_or_none == 'Save':
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\non_prepro_mean_spectrum.png')
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\prepro_spectrum.png')
+                if save_or_none == 'None':
+                    pass
+
+        if data_split == 'None':
+            wavelengths_prepro_spectrum = df.iloc[:0, 12:]
+            full_waves_spectrum = [f'{e}' for e in wavelengths_prepro_spectrum]
             for check in range(0, len(list_data)):
-                if check < 2:
-                    Data_plot = pd.read_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}.csv', sep=',')
-                    Data_plot = pd.DataFrame(Data_plot)
-                    # load plot data
-                    plot(Ax[0, check], Data_plot, start=start_col, title=f'{list_data[check]}')
-                    # load plot mean data
-                    plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
+                try:
+                    list_data_value0 = df[df[f'{name_column}'] == f'{list_data[check]}']
+                    list_data_value0 = list_data_value0.iloc[:, 12:]
+                    prepro_list_data_value0 = msc(list_data_value0)
+                    list_data_value0 = pd.DataFrame(list_data_value0, columns=full_waves_spectrum)
+                    prepro_list_data_value0 = pd.DataFrame(prepro_list_data_value0, columns=full_waves_spectrum)
+                    list_data_value0.to_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}' + '.csv',
+                                            index=False,
+                                            header=True)
+                    prepro_list_data_value0.to_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}' + '.csv',
+                                                   index=False,
+                                                   header=True)
+                except:
+                    pass
 
-            plt.legend()
-            plt.grid(1)
-            plt.show()
-            plt.savefig(path_spectrum + r'\non_prepro_mean_spectrum.png')
-            plt.savefig(path_spectrum + r'\prepro_spectrum.png')
+            print(f'Successful export data non_prepro_spectrum excel to {path_spectrum}')
+
+            # input column starting waves
+            start_col = 1
+            count = 0
+            if non_prepro == 'None':
+
+                fig, Ax = plt.subplots(2, figsize=(14, 7))
+                fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
+                plt.subplots_adjust(left=0.076, right=0.96)
+                fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
+                fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
+                plt.figure(figsize=(10, 7))
+                plt.title('Mean Spectrum', fontsize=19, fontweight='bold')
+
+                for check in range(0, len(list_data)):
+                    try:
+                        if check < 2:
+                            # load file
+                            Data_plot = pd.read_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}.csv',
+                                                    sep=',')
+                            Data_plot = pd.DataFrame(Data_plot)
+                            # load plot data
+                            plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
+                            # load plot mean data
+                            plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
+                    except:
+                        print('Not have data', {list_data[check]})
+
+                plt.grid(1)
+                plt.legend()
+                plt.show()
+                if save_or_none == 'Save':
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\non_prepro_spectrum.png')
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\non_prepro_mean_spectrum.png')
+                if save_or_none == 'None':
+                    pass
+
+            if non_prepro == 'Prepro':
+
+                fig, Ax = plt.subplots(2, )
+                fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
+                plt.subplots_adjust(left=0.076, right=0.96)
+                fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
+                fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
+                plt.figure(figsize=(10, 7))
+                plt.title('Mean Spectrum', fontsize=19, fontweight='bold')
+
+                for check in range(0, len(list_data)):
+                    try:
+                        if check < 2:
+                            # load file
+                            Data_plot = pd.read_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}.csv',
+                                                    sep=',')
+                            Data_plot = pd.DataFrame(Data_plot)
+                            # load plot data
+                            plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
+                            # load plot mean data
+                            plot_mean(Data_plot, start=start_col, label=f'{list_data[check]}')
+                    except:
+                        print('Not have data', {list_data[check]})
+
+                plt.legend()
+                plt.grid(1)
+                plt.show()
+                if save_or_none == 'Save':
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\non_prepro_mean_spectrum.png')
+                    plt.savefig(path_spectrum + r'\spectrum' + r'\prepro_spectrum.png')
+                if save_or_none == 'None':
+                    pass
 
 
 # chay chuong trinh
 if __name__ == "__main__":
-
-    # path calib
-    path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
-    # path read file csv and path save file csv
-    folder_sensor = r'D:\Luan Van\data_sensor\2023-09-27'
-    path_folder_save = r'D:\Luan Van\Data\Demo_Data'
-
-    # path file part waves
-    path_save_file_loc_waves = r'D:\Luan Van\Data\loc_waves'
-    path_file_loc_waves = r'D:\Luan Van\Data\loc_waves\change_val_file_waves.csv'
-
     # path data excel
-    path_file = r'D:\Luan Van\Data\Final_Data\Data_ALL.csv'
-    path_file_spectrum = r'D:\Luan Van\Data\Final_Data'
+    path_file_data_all = r'D:\Luan Van\Data\Final_Data\Final_Data.csv'
+    path_folder_file_data_all = r'D:\Luan Van\Data\Final_Data'
 
     # path save
     path_save_train_test = r'D:\Luan Van\Data\train_test'
 
-    # path save
-    path_save_prepro_spectrum = r'D:\Luan Van\Data\spectrum'
-
     # --------------------------------------EXPORT DATA-----------------------------------------------------------------
-    data_excel(file_name='New_Demo_Data_270923',
-               path_folder_sensor=folder_sensor,
-               path_save=path_folder_save,
-               path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
-                                                        'Point', 'Position', 'Number'],
-               Cultivar_name='QD')
+    # path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
+    # folder_sensor = r'D:\Luan Van\data_sensor\2023-10-02'
+    # path_folder_save = r'D:\Luan Van\Data\Demo_Data'
+    #
+    # data_excel(file_name='Demo_Data_021023',
+    #            path_folder_sensor=folder_sensor,
+    #            path_save=path_folder_save,
+    #            path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
+    #                                                     'Point', 'Position', 'Number'],
+    #            Cultivar_name='QD')
 
     # --------------------------------------FIND BEST WAVES-------------------------------------------------------------
+    # path_save_file_loc_waves = r'D:\Luan Van\Data\loc_waves'
+    #
     # data_find_best_waves(n_estimators=100,
     #                      k_train=100,
     #                      namefile='change_val',
-    #                      path_file_data=path_file,
+    #                      path_file_data=path_file_data_all,
     #                      path_save=path_save_file_loc_waves)
 
-    # --------------------------------------REGRESSION DATA-------------------------------------------------------------
-    # data_train_test(path_file_data=path_file, test_size=0.3,
+    # --------------------------------------TRAIN TEST SPLIT------------------------------------------------------------
+    # path_file_loc_waves = r'D:\Luan Van\Data\loc_waves\change_val_file_waves.csv'
+    #
+    # data_train_test(path_file_data=path_file_data_all, test_size=0.2,
     #                 path_file_new_waves=path_file_loc_waves,
     #                 full_or_part='full',
     #                 path_save=path_save_train_test)
-    #
+
+    # --------------------------------------PREPROCESS DATA-------------------------------------------------------------
     # data_preprocess(path_train_test=path_save_train_test)
-    #
+
+    # --------------------------------------REGRESSION DATA-------------------------------------------------------------
     # data_predict_regression(model_regression='PLS',
     #                         path_file_data=path_save_train_test,
-    #                         preprocess='non')
+    #                         preprocess='Prepro')
 
     # --------------------------------------SPECTRUM PLOT---------------------------------------------------------------
-    # data_spectrum(name_folder='Data_All',
-    #               path_file_data=path_file_spectrum,
-    #               path_spectrum=path_save_prepro_spectrum,
-    #               name_column='Position',
-    #               list_data=['Segments', 'Mid of Segments'],
-    #               non_prepro='non')
+    path_save_prepro_spectrum = r'D:\Luan Van\Data\spectrum'
+
+    data_spectrum(name_file='Final_Data', path_file_data=path_folder_file_data_all,
+                  data_split='None', name_split_column='Days late', name_value_split='2 days',
+                  path_spectrum=path_save_prepro_spectrum, save_or_none='None',
+                  name_column='Position', list_data=['Mid of Segments', 'Mid of 2 Segments'],
+                  non_prepro='None')

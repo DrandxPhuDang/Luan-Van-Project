@@ -12,7 +12,7 @@ startcol = 10
 read_data = pd.read_csv(path + f'\{namefolder}.csv', sep=',')
 df = pd.DataFrame(read_data)
 
-# Num1 = df[df['Number of Tangerine'] == 1]
+Num1 = df[df['Number of Tangerine'] == 1]
 # Num2 = df[df['Number of Tangerine'] == 2]
 
 Position1 = df[df['Point Measurements'] == 1]
