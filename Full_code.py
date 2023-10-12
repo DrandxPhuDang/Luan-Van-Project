@@ -4,15 +4,21 @@ from kennard_stone import train_test_split
 import pandas as pd
 import numpy as np
 from scipy.signal import savgol_filter
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestRegressor, StackingRegressor
 import warnings
+
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF
 from sklearn.model_selection import GridSearchCV
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-from mlxtend.preprocessing import MeanCenterer
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn import preprocessing
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeRegressor
 
 
 class data_excel:
@@ -66,19 +72,19 @@ class data_excel:
         self.name_data, self.data_main = Get_data(self.path_folder)
 
         # get data first column và cột thứ 4
-        self.listWavelength = self.data_main.values[0:126, 0].tolist()
+        self.listWavelength = self.data_main.values[0:228, 0].tolist()
 
         # column to row function change_shape
         self.data_main = Change_shape(self.data_main)
         self.data_main = pd.DataFrame(self.data_main)
 
         # data_calib = change_shape(calib)
-        self.data_main.drop(self.data_main.columns[126:], axis=1, inplace=True)
+        self.data_main.drop(self.data_main.columns[228:], axis=1, inplace=True)
 
         # Drop data Calib
         self.data_calib = pd.read_csv(fr"{path_calib_file}")
         self.data_calib = pd.DataFrame(self.data_calib)
-        self.data_calib.drop(self.data_calib.columns[126:], axis=1, inplace=True)
+        self.data_calib.drop(self.data_calib.columns[228:], axis=1, inplace=True)
         self.data_calib = self.data_calib.T
 
         # Tinh gia tri reference
@@ -104,7 +110,7 @@ class data_excel:
             list_all = [Ratio, Acid, Brix, Date, Point, Position, Number]
 
             for name in self.name_data:
-                Cultivar = 'Quyt Duong'
+                Cultivar = 'QD'
                 name = name.replace('_', '')
                 if name[0] == 'e':
                     Number.append(name[1:4])
@@ -118,7 +124,7 @@ class data_excel:
                     Acid.append(name[1])
                     Ratio.append(name[1])
                 if name[0] != 'e':
-                    Cultivar = 'Quyt Duong'
+                    Cultivar = 'QD'
                     Number.append(name[1:4])
                     if name[8] == 'A':
                         Position.append('Mid of Segments')
@@ -330,171 +336,148 @@ class data_find_best_waves:
         save_waves_important()
 
 
-class data_train_test:
+class Preprocessing_data:
 
-    def __init__(self, path_file_data, path_file_new_waves, full_or_part, path_save, test_size):
+    def __init__(self, path_file_data, path_file_new_waves, full_or_part, path_save):
         # tao bien dung chung
         super().__init__()
 
         print(f'Splitting Data Train_Test...')
+        try:
+            self.df = pd.read_csv(path_file_data)
+            self.listWavelength = self.df.iloc[:0, 12:]
+            self.full_waves = [f'{e}' for e in self.listWavelength]
 
-        self.df = pd.read_csv(path_file_data)
-        self.listWavelength = self.df.iloc[:0, 12:]
-        full_waves = [f'{e}' for e in self.listWavelength]
-
-        self.listW = pd.read_csv(path_file_new_waves)
-        part_waves = [f'{e}' for e in self.listW]
+            self.listW = pd.read_csv(path_file_new_waves)
+            self.part_waves = [f'{e}' for e in self.listW]
+        except:
+            pass
 
         if full_or_part == 'full':
-            self.data_final = self.df[full_waves].values
-            self.wavelength = full_waves
+            self.data_final = self.df[self.full_waves].values
+            self.wavelength = self.full_waves
         if full_or_part == 'part':
-            self.data_final = self.df[part_waves].values
-            self.wavelength = part_waves
+            self.data_final = self.df[self.part_waves].values
+            self.wavelength = self.part_waves
 
         # Chia data X: val_wavelengths, y: Brix
         self.X = self.data_final
         self.y = self.df['Brix']
 
-        # train test split
-        self.X_train_all, self.X_test_all, self.y_train_all, self.y_test_all = train_test_split(self.X, self.y,
-                                                                                                test_size=test_size)
+        pd.DataFrame(self.X).to_csv(path_save + r'\X_non_prepro_data' + '.csv', index=False, header=True)
+        pd.DataFrame(self.y).to_csv(path_save + r'\Y_non_prepro_data' + '.csv', index=False, header=True)
 
-        self.X_train_all = np.array(self.X_train_all)
-        self.X_test_all = np.array(self.X_test_all)
-        self.X_train_all = pd.DataFrame(self.X_train_all, columns=self.wavelength)
-        self.X_test_all = pd.DataFrame(self.X_test_all, columns=self.wavelength)
+        print(f'Successful export data_non_preprocessing excel to {path_save}')
 
-        self.y_train_all = np.array(self.y_train_all)
-        self.y_test_all = np.array(self.y_test_all)
-        self.y_train_all = pd.DataFrame(self.y_train_all)
-        self.y_test_all = pd.DataFrame(self.y_test_all)
+        def mean_center(X):
+            mean_X = np.mean(X)
+            X_centered = X - mean_X
+            return X_centered
 
-        self.X_train_all.insert(loc=0, column='Brix', value=self.y_train_all)
-        self.X_test_all.insert(loc=0, column='Brix', value=self.y_test_all)
+        def remove_outliers(data_X, data_y, threshold):
+            # Create and fit the PLS regression model
+            regressor = PLSRegression(n_components=4)
+            regressor.fit(data_X, data_y)
+            # Predict the target values
+            y_pred = regressor.predict(data_X)
+            # Calculate the residuals
+            residuals = data_y - y_pred
+            # Set the threshold for outliers
+            threshold_ = threshold * np.std(residuals)
+            # Set the threshold for outliers
+            outliers_mask = np.abs(residuals) > threshold_
+            # Set the threshold for outliers
+            X_clean_data = pd.DataFrame(data_X[~outliers_mask])
+            y_clean_data = pd.DataFrame(data_y[~outliers_mask])
+            return X_clean_data, y_clean_data
 
-        print(f'Successful export data non_preprocess excel to {path_save}')
+        def preprocessing_data(X_data):
+            X_data = pd.DataFrame(X_data).dropna()
+            # Fill in missing values using mean imputation
+            X_data.fillna(X_data.mean(), inplace=True)
+            # normalize
+            X_data = preprocessing.normalize(X_data.values)
+            # Normalizer
+            prepro_normal_train = preprocessing.Normalizer().fit(X_data)
+            X_data = prepro_normal_train.transform(X_data)
+            # S_Filter
+            X_data = savgol_filter(X_data, window_length=5, polyorder=2)
+            # Min Max Scaler
+            scaler_X_train = preprocessing.MinMaxScaler(feature_range=(-1, 1))
+            X_data = scaler_X_train.fit_transform(X_data)
+            X_data = scaler_X_train.inverse_transform(X_data)
+            X_data = pd.DataFrame(X_data)
+            return X_data
 
-        self.X_train_all.to_csv(path_save + r'\non_prepro_train' + '.csv', index=False, header=True)
-        self.X_test_all.to_csv(path_save + r'\non_prepro_test' + '.csv', index=False, header=True)
+        # X_clean = mean_center(self.X)
+        X_clean = preprocessing_data(self.X)
+        # X_clean, y_clean = remove_outliers(X_clean, self.y, threshold=1)
+
+        X_clean.to_csv(path_save + r'\X_prepro_data' + '.csv', index=False, header=True)
+        pd.DataFrame(self.y).to_csv(path_save + r'\Y_prepro_data' + '.csv', index=False, header=True)
+
+        print(f'Successful export data_preprocessing excel to {path_save}')
 
 
-class data_preprocess:
+class split_data:
 
-    def __init__(self, path_train_test):
+    def __init__(self, path_train_test, test_size, prepro_or_none):
         # tao bien dung chung
         super().__init__()
+        if prepro_or_none == 'None':
+            self.data_X = pd.read_csv(f'{path_train_test}' + r'\X_non_prepro_data' + '.csv')
+            self.data_Y = pd.read_csv(f'{path_train_test}' + r'\Y_non_prepro_data' + '.csv')
+        if prepro_or_none == 'Prepro':
+            self.data_X = pd.read_csv(f'{path_train_test}' + r'\X_prepro_data' + '.csv')
+            self.data_Y = pd.read_csv(f'{path_train_test}' + r'\Y_prepro_data' + '.csv')
 
-        def msc(input_data):
-            input_data = np.array(input_data, dtype=np.float64)
-            ref = []
-            sampleCount = int(len(input_data))
-            # mean centre correction
-            for i in range(input_data.shape[0]):
-                input_data[i, :] -= input_data[i, :].mean()
-            data_msc = np.zeros_like(input_data)
-            for i in range(input_data.shape[0]):
-                for j in range(0, sampleCount, 10):
-                    ref.append(np.mean(input_data[j:j + 10], axis=0))
-                    fit = np.polyfit(ref[i], input_data[i, :], 1, full=True)
-                    data_msc[i, :] = (input_data[i, :] - fit[0][1]) / fit[0][0]
-            return data_msc
-
-        self.data_train = pd.read_csv(f'{path_train_test}' + r'\non_prepro_train' + '.csv')
-        self.data_test = pd.read_csv(f'{path_train_test}' + r'\non_prepro_test' + '.csv')
-
-        self.X_train = self.data_train.iloc[:, 1:]
-        self.y_train = self.data_train['Brix']
-        self.X_test = self.data_test.iloc[:, 1:]
-        self.y_test = self.data_test['Brix']
-
-        wavelengths_re = self.data_train.iloc[:0, 1:]
+        wavelengths_re = self.data_X.iloc[:0, 0:]
         full_waves = [f'{e}' for e in wavelengths_re]
 
-        # Using preprocess on X_TRAIN
-        def prepro_X_train():
-            self.X_train = preprocessing.normalize(self.X_train.values)
-            prepro_normal_train = preprocessing.Normalizer().fit(self.X_train)
-            self.X_train = prepro_normal_train.transform(self.X_train)
-            self.X_train = savgol_filter(self.X_train, window_length=5, polyorder=2)
-            scaler_X_train = preprocessing.MinMaxScaler(feature_range=(0, 2))
-            self.X_train = scaler_X_train.fit_transform(self.X_train)
-            self.X_train = scaler_X_train.inverse_transform(self.X_train)
-            self.X_train_msc = msc(self.X_train)
-
-        prepro_X_train()
-
-        # Using preprocess on X_TEST
-        def prepro_X_test():
-            self.X_test = preprocessing.normalize(self.X_test.values)
-            prepro_normal_test = preprocessing.Normalizer().fit(self.X_test)
-            self.X_test = prepro_normal_test.transform(self.X_test)
-            self.X_test = savgol_filter(self.X_test, window_length=5, polyorder=2)
-            scaler_X_test = preprocessing.MinMaxScaler(feature_range=(0, 2))
-            self.X_test = scaler_X_test.fit_transform(self.X_test)
-            self.X_test = scaler_X_test.inverse_transform(self.X_test)
-            self.X_test_msc = msc(self.X_test)
-
-        prepro_X_test()
-
-        # Mean_Center
-        mc_pls = MeanCenterer().fit(self.X_train)
-        self.X_train = mc_pls.transform(self.X_train)
-        self.X_test = mc_pls.transform(self.X_test)
+        X_train, X_test, y_train, y_test = train_test_split(self.data_X, self.data_Y, test_size=test_size)
 
         # Add thanh data frame
-        self.X_train = pd.DataFrame(self.X_train, columns=full_waves)
-        self.X_train_pre_all = pd.DataFrame(self.X_train)
+        X_train = pd.DataFrame(X_train, columns=full_waves)
+        X_train_pre_all = pd.DataFrame(X_train)
         # Add thanh data frame
-        self.X_test = pd.DataFrame(self.X_test, columns=full_waves)
-        self.X_test_pre_all = pd.DataFrame(self.X_test)
-
-        self.X_train_pre_all.insert(loc=0, column='Brix', value=self.y_train)
-        self.X_test_pre_all.insert(loc=0, column='Brix', value=self.y_test)
-
-        print(f'Successful export data preprocess excel to {path_train_test}')
-
-        self.X_train_pre_all.to_csv(path_train_test + r'\prepro_train' + '.csv', index=False, header=True)
-        self.X_test_pre_all.to_csv(path_train_test + r'\prepro_test' + '.csv', index=False, header=True)
+        X_test = pd.DataFrame(X_test, columns=full_waves)
+        X_test_pre_all = pd.DataFrame(X_test)
+        X_train_pre_all.insert(loc=0, column='Brix', value=y_train)
+        X_test_pre_all.insert(loc=0, column='Brix', value=y_test)
+        X_train_pre_all.to_csv(path_train_test + r'\data_train' + '.csv', index=False, header=True)
+        X_test_pre_all.to_csv(path_train_test + r'\data_test' + '.csv', index=False, header=True)
 
 
 class data_predict_regression:
 
-    def __init__(self, model_regression, path_file_data, preprocess):
+    def __init__(self, model_regression, path_file_data):
         # tao bien dung chung
         super().__init__()
-        if preprocess == 'Prepro':
-            self.data_pre_train = pd.read_csv(f'{path_file_data}' + r'\prepro_train' + '.csv')
-            self.data_pre_test = pd.read_csv(f'{path_file_data}' + r'\prepro_test' + '.csv')
-        if preprocess == 'None':
-            self.data_pre_train = pd.read_csv(f'{path_file_data}' + r'\non_prepro_train' + '.csv')
-            self.data_pre_test = pd.read_csv(f'{path_file_data}' + r'\non_prepro_test' + '.csv')
+
+        self.data_pre_train = pd.read_csv(f'{path_file_data}' + r'\data_train' + '.csv')
+        self.data_pre_test = pd.read_csv(f'{path_file_data}' + r'\data_test' + '.csv')
 
         self.X_pre_train = self.data_pre_train.iloc[:, 1:]
         self.y_pre_train = self.data_pre_train['Brix']
         self.X_pre_test = self.data_pre_test.iloc[:, 1:]
         self.y_pre_test = self.data_pre_test['Brix']
 
-        self.X_pre_all = self.X_pre_train.append(self.X_pre_test)
-        self.y_pre_all = self.y_pre_train.append(self.y_pre_test)
+        self.all_X = pd.DataFrame(self.X_pre_train.append(self.X_pre_test))
+        self.all_y = pd.DataFrame(self.y_pre_train.append(self.y_pre_test))
 
         if model_regression == 'PLS':
             name_model_pls = 'PLS'
-            # choose number component fit by Cross-validation
-            param = {
-                'n_components': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-                                 25]}
-            model_pls = PLSRegression()
-            search = GridSearchCV(model_pls, param, cv=10, scoring='neg_mean_squared_error', return_train_score=True,
-                                  refit=True)
-            search.fit(self.X_pre_train, self.y_pre_train)
-            # Train model cross-validation
-            model_pls = PLSRegression(n_components=search.best_params_["n_components"])
 
-            model_pls.fit(self.X_pre_train, self.y_pre_train)
+            model = PLSRegression(n_components=5)
+            # model = GaussianProcessRegressor(kernel=RBF(length_scale=1.0), alpha=0.1)
+            # model = RandomForestRegressor(n_estimators=59,
+            #                               random_state=42, max_depth=15)
+
+            model.fit(self.X_pre_train, self.y_pre_train)
+
             # Evaluate model
-            y_train_pred_pls = model_pls.predict(self.X_pre_train)
-            y_test_pred_pls = model_pls.predict(self.X_pre_test)
+            y_train_pred_pls = model.predict(self.X_pre_train)
+            y_test_pred_pls = model.predict(self.X_pre_test)
 
             # R, R_Squared, R_MSE
             print('--------------- TRAIN--------------------')
@@ -522,121 +505,77 @@ class data_predict_regression:
             RPD_Test_pls = np.std(self.y_pre_test) / RMSE_Test_pls
             print('RPD:', "{:.2f}".format(RPD_Test_pls))
 
-            def load_spectrum():
-                plt.scatter(self.y_pre_test, y_test_pred_pls)
+            def load_spectrum(y, y_pred):
+                plt.scatter(y, y_pred, label='Data')
                 plt.xlabel('Actual Response')
                 plt.ylabel('Predicted Response')
                 plt.title(f'{name_model_pls} Regression (R²={R_Squared_Test_pls:.2f})')
-                reg_pls = np.polyfit(self.y_pre_test, y_test_pred_pls, deg=1)
-                trend_pls = np.polyval(reg_pls, self.y_pre_test)
-                plt.plot(self.y_pre_test, trend_pls, 'r')
+                reg_pls = np.polyfit(y, y_pred, deg=1)
+                trend_pls = np.polyval(reg_pls, y)
+                plt.plot(y, trend_pls, 'r', label='Line pred')
+                plt.plot(y, y, color='green', linestyle='--', linewidth=1, label="Line fit")
                 plt.show()
 
-            load_spectrum()
+            load_spectrum(self.y_pre_test, y_test_pred_pls)
 
-        if model_regression == 'RF':
-            name_model_rf = 'Random Forest'
+        if model_regression == 'Combine':
+            name_model_knn = 'Stracking'
 
-            model_rf = RandomForestRegressor()
+            base_models = [
+                ('rf', PLSRegression(n_components=7)),
+                ('p', KNeighborsRegressor(n_neighbors=90)),
+                # ('g', GaussianProcessRegressor(kernel=RBF(length_scale=1.0), alpha=0.1))
+            ]
 
-            # Define the hyperparameters for grid search
-            param_grid = {
-                'n_estimators': [10, 50, 100],
-                'max_features': ['auto', 'sqrt', 'log2'],
-                'min_samples_split': [2, 4, 8],
-                'bootstrap': [True, False]
-            }
+            # model_knn = PLSRegression(n_components=2)
+            model_knn = RandomForestRegressor(n_estimators=60, random_state=42, max_depth=5)
+            # model_knn = KNeighborsRegressor(n_neighbors=20)
+            # model_knn = GaussianProcessRegressor(kernel=RBF(length_scale=1.0), alpha=0.1)
+            model_knn = StackingRegressor(estimators=base_models, final_estimator=model_knn)
 
-            # Perform grid search to find the best hyperparameters
-            grid_search = GridSearchCV(estimator=model_rf, param_grid=param_grid, cv=5)
-            grid_search.fit(self.X_pre_train, self.y_pre_train)
+            model_knn.fit(self.X_pre_train, self.y_pre_train)
 
-            y_train_pred_rf = grid_search.predict(self.X_pre_train)
-            y_test_pred_rf = grid_search.predict(self.X_pre_test)
+            y_train_pred_knn = model_knn.predict(self.X_pre_train)
+            y_test_pred_knn = model_knn.predict(self.X_pre_test)
 
             # R, R_Squared, R_MSE
             print('--------------- TRAIN--------------------')
-            R_Train_rf = np.corrcoef(self.y_pre_train, y_train_pred_rf, rowvar=False)
-            print('R:', "{:.3f}".format(R_Train_rf[0][1]))
-            R_Squared_Train_rf = r2_score(self.y_pre_train, y_train_pred_rf)
-            print('R^2:', "{:.3f}".format(R_Squared_Train_rf))
-            print(f"Accuracy: {R_Squared_Train_rf * 100:.3f}%")
-            RMSE_Train_rf = math.sqrt(mean_squared_error(self.y_pre_train, y_train_pred_rf))
-            print('R_MSE :', "{:.3f}".format(RMSE_Train_rf))
-            MAE_Train_rf = mean_absolute_error(self.y_pre_train, y_train_pred_rf)
-            print('MAE:', "{:.3f}".format(MAE_Train_rf))
+            R_Train_knn = np.corrcoef(self.y_pre_train, y_train_pred_knn, rowvar=False)
+            print('R:', "{:.3f}".format(R_Train_knn[0][1]))
+            R_Squared_Train_knn = r2_score(self.y_pre_train, y_train_pred_knn)
+            print('R^2:', "{:.3f}".format(R_Squared_Train_knn))
+            print(f"Accuracy: {R_Squared_Train_knn * 100:.3f}%")
+            RMSE_Train_knn = math.sqrt(mean_squared_error(self.y_pre_train, y_train_pred_knn))
+            print('R_MSE :', "{:.3f}".format(RMSE_Train_knn))
+            MAE_Train_knn = mean_absolute_error(self.y_pre_train, y_train_pred_knn)
+            print('MAE:', "{:.3f}".format(MAE_Train_knn))
             # R, R_Squared, R_MSE
             print('--------------- TEST--------------------')
-            R_Test_rf = np.corrcoef(self.y_pre_test, y_test_pred_rf, rowvar=False)
-            print('R:', "{:.3f}".format(R_Test_rf[0][1]))
-            R_Squared_Test_rf = r2_score(self.y_pre_test, y_test_pred_rf)
-            print('R^2:', "{:.3f}".format(R_Squared_Test_rf))
-            print(f"Accuracy: {R_Squared_Test_rf * 100:.3f}%")
-            RMSE_Test_rf = math.sqrt(mean_squared_error(self.y_pre_test, y_test_pred_rf))
-            print('R_MSE :', "{:.3f}".format(RMSE_Test_rf))
-            MAE_Test_rf = mean_absolute_error(self.y_pre_test, y_test_pred_rf)
-            print('MAE:', "{:.3f}".format(MAE_Test_rf))
+            R_Test_knn = np.corrcoef(self.y_pre_test, y_test_pred_knn, rowvar=False)
+            print('R:', "{:.3f}".format(R_Test_knn[0][1]))
+            R_Squared_Test_knn = r2_score(self.y_pre_test, y_test_pred_knn)
+            print('R^2:', "{:.3f}".format(R_Squared_Test_knn))
+            print(f"Accuracy: {R_Squared_Test_knn * 100:.3f}%")
+            RMSE_Test_knn = math.sqrt(mean_squared_error(self.y_pre_test, y_test_pred_knn))
+            print('R_MSE :', "{:.3f}".format(RMSE_Test_knn))
+            MAE_Test_knn = mean_absolute_error(self.y_pre_test, y_test_pred_knn)
+            print('MAE:', "{:.3f}".format(MAE_Test_knn))
             print('--------------- RPD--------------------')
-            RPD_Test_rf = np.std(self.y_pre_test) / RMSE_Test_rf
-            print('RPD:', "{:.2f}".format(RPD_Test_rf))
+            RPD_Test_knn = np.std(self.y_pre_test) / RMSE_Test_knn
+            print('RPD:', "{:.2f}".format(RPD_Test_knn))
 
-            def load_spectrum():
-                plt.scatter(self.y_pre_test, y_test_pred_rf)
+            def load_spectrum(y, y_pred):
+                plt.scatter(y, y_pred, label='Data')
                 plt.xlabel('Actual Response')
                 plt.ylabel('Predicted Response')
-                plt.title(f'{name_model_rf} Regression (R²={R_Squared_Test_rf:.2f})')
-                reg_rf = np.polyfit(self.y_pre_test, y_test_pred_rf, deg=1)
-                trend_rf = np.polyval(reg_rf, self.y_pre_test)
-                plt.plot(self.y_pre_test, trend_rf, 'r')
+                plt.title(f'{name_model_knn} Regression (R²={R_Squared_Test_knn:.2f})')
+                reg_knn = np.polyfit(y, y_pred, deg=1)
+                trend_knn = np.polyval(reg_knn, y)
+                plt.plot(y, trend_knn, 'r', label='Line pred')
+                plt.plot(y, y, color='green', linestyle='--', linewidth=1, label='Line fit')
                 plt.show()
 
-            load_spectrum()
-
-        if model_regression == 'L':
-            name_model_l = 'Linear'
-
-            model_l = LinearRegression()
-            model_l.fit(self.X_pre_train, self.y_pre_train)
-            y_train_pred_l = model_l.predict(self.X_pre_train)
-            y_test_pred_l = model_l.predict(self.X_pre_test)
-
-            # R, R_Squared, R_MSE
-            print('--------------- TRAIN--------------------')
-            R_Train_l = np.corrcoef(self.y_pre_train, y_train_pred_l, rowvar=False)
-            print('R:', "{:.3f}".format(R_Train_l[0][1]))
-            R_Squared_Train_l = round(r2_score(self.y_pre_train, y_train_pred_l))
-            print('R^2:', "{:.3f}".format(R_Squared_Train_l))
-            print(f"Accuracy: {R_Squared_Train_l * 100:.3f}%")
-            RMSE_Train_l = round(math.sqrt(mean_squared_error(self.y_pre_train, y_train_pred_l)))
-            print('R_MSE :', "{:.3f}".format(RMSE_Train_l))
-            MAE_Train_l = round(mean_absolute_error(self.y_pre_train, y_train_pred_l))
-            print('MAE:', "{:.3f}".format(MAE_Train_l))
-            # R, R_Squared, R_MSE
-            print('--------------- TEST--------------------')
-            R_Test_l = np.corrcoef(self.y_pre_test, y_test_pred_l, rowvar=False)
-            print('R:', "{:.3f}".format(R_Test_l[0][1]))
-            R_Squared_Test_l = round(r2_score(self.y_pre_test, y_test_pred_l))
-            print('R^2:', "{:.3f}".format(R_Squared_Test_l))
-            print(f"Accuracy: {R_Squared_Test_l * 100:.2f}%")
-            RMSE_Test_l = round(math.sqrt(mean_squared_error(self.y_pre_test, y_test_pred_l)))
-            print('R_MSE :', "{:.3f}".format(RMSE_Test_l))
-            MAE_Test_l = round(mean_absolute_error(self.y_pre_test, y_test_pred_l))
-            print('MAE:', "{:.3f}".format(MAE_Test_l))
-            print('--------------- RPD--------------------')
-            RPD_Test_l = round(np.std(self.y_pre_test) / RMSE_Test_l)
-            print('RPD:', "{:.2f}".format(RPD_Test_l))
-
-            def load_spectrum():
-                plt.scatter(self.y_pre_test, y_test_pred_l)
-                plt.xlabel('Actual Response')
-                plt.ylabel('Predicted Response')
-                plt.title(f'{name_model_l} Regression (R²={R_Squared_Test_l:.2f})')
-                reg_l = np.polyfit(self.y_pre_test, y_test_pred_l, deg=1)
-                trend_l = np.polyval(reg_l, self.y_pre_test)
-                plt.plot(self.y_pre_test, trend_l, 'r')
-                plt.show()
-
-            load_spectrum()
+            load_spectrum(self.y_pre_test, y_test_pred_knn)
 
 
 class data_spectrum:
@@ -687,16 +626,15 @@ class data_spectrum:
             ax.set_ylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
 
         # input column starting waves
-        read_data = pd.read_csv(path_file_data + fr'\{name_file}.csv', sep=',')
-        df = pd.DataFrame(read_data)
-        df_loc = df[df[f'{name_split_column}'] == f'{name_value_split}']
+        df = pd.read_csv(path_file_data + fr'\{name_file}.csv', sep=',')
+        df_loc = df[df[f'{name_split_column}'] == name_value_split]
 
         if data_split == 'Split':
             wavelengths_prepro_spectrum = df_loc.iloc[:0, 12:]
             full_waves_spectrum = [f'{e}' for e in wavelengths_prepro_spectrum]
             for check in range(0, len(list_data)):
                 try:
-                    list_data_value0 = df_loc[df_loc[f'{name_column}'] == f'{list_data[check]}']
+                    list_data_value0 = df_loc[df_loc[f'{name_column}'] == list_data[check]]
                     list_data_value0 = list_data_value0.iloc[:, 12:]
                     prepro_list_data_value0 = msc(list_data_value0)
                     list_data_value0 = pd.DataFrame(list_data_value0, columns=full_waves_spectrum)
@@ -714,10 +652,9 @@ class data_spectrum:
 
             # input column starting waves
             start_col = 1
-            count = 0
             if non_prepro == 'None':
 
-                fig, Ax = plt.subplots(2, figsize=(14, 7))
+                fig, Ax = plt.subplots(2, figsize=(12, 7))
                 fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
                 plt.subplots_adjust(left=0.076, right=0.96)
                 fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
@@ -731,7 +668,6 @@ class data_spectrum:
                             # load file
                             Data_plot = pd.read_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}.csv',
                                                     sep=',')
-                            Data_plot = pd.DataFrame(Data_plot)
                             # load plot data
                             plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
                             # load plot mean data
@@ -750,7 +686,7 @@ class data_spectrum:
 
             if non_prepro == 'Prepro':
 
-                fig, Ax = plt.subplots(2, figsize=(14, 7))
+                fig, Ax = plt.subplots(2, figsize=(12, 7))
                 fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
                 plt.subplots_adjust(left=0.076, right=0.96)
                 fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
@@ -764,7 +700,6 @@ class data_spectrum:
                             # load file
                             Data_plot = pd.read_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}.csv',
                                                     sep=',')
-                            Data_plot = pd.DataFrame(Data_plot)
                             # load plot data
                             plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
                             # load plot mean data
@@ -786,7 +721,7 @@ class data_spectrum:
             full_waves_spectrum = [f'{e}' for e in wavelengths_prepro_spectrum]
             for check in range(0, len(list_data)):
                 try:
-                    list_data_value0 = df[df[f'{name_column}'] == f'{list_data[check]}']
+                    list_data_value0 = df[df[f'{name_column}'] == list_data[check]]
                     list_data_value0 = list_data_value0.iloc[:, 12:]
                     prepro_list_data_value0 = msc(list_data_value0)
                     list_data_value0 = pd.DataFrame(list_data_value0, columns=full_waves_spectrum)
@@ -804,10 +739,9 @@ class data_spectrum:
 
             # input column starting waves
             start_col = 1
-            count = 0
             if non_prepro == 'None':
 
-                fig, Ax = plt.subplots(2, figsize=(14, 7))
+                fig, Ax = plt.subplots(2, figsize=(12, 7))
                 fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
                 plt.subplots_adjust(left=0.076, right=0.96)
                 fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
@@ -821,7 +755,6 @@ class data_spectrum:
                             # load file
                             Data_plot = pd.read_csv(path_spectrum + r'\non_prepro' + fr'\{list_data[check]}.csv',
                                                     sep=',')
-                            Data_plot = pd.DataFrame(Data_plot)
                             # load plot data
                             plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
                             # load plot mean data
@@ -840,7 +773,7 @@ class data_spectrum:
 
             if non_prepro == 'Prepro':
 
-                fig, Ax = plt.subplots(2, )
+                fig, Ax = plt.subplots(2, figsize=(12, 7))
                 fig.suptitle('Spectrum', fontsize=19, fontweight='bold')
                 plt.subplots_adjust(left=0.076, right=0.96)
                 fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
@@ -854,7 +787,6 @@ class data_spectrum:
                             # load file
                             Data_plot = pd.read_csv(path_spectrum + r'\prepro' + fr'\{list_data[check]}.csv',
                                                     sep=',')
-                            Data_plot = pd.DataFrame(Data_plot)
                             # load plot data
                             plot(Ax[check], Data_plot, start=start_col, title=f'{list_data[check]}')
                             # load plot mean data
@@ -883,10 +815,10 @@ if __name__ == "__main__":
 
     # --------------------------------------EXPORT DATA-----------------------------------------------------------------
     # path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
-    # folder_sensor = r'D:\Luan Van\data_sensor\2023-10-02'
+    # folder_sensor = r'D:\Luan Van\data_sensor\2023-09-30'
     # path_folder_save = r'D:\Luan Van\Data\Demo_Data'
     #
-    # data_excel(file_name='Demo_Data_021023',
+    # data_excel(file_name='Demo_Data_300923_full-waves',
     #            path_folder_sensor=folder_sensor,
     #            path_save=path_folder_save,
     #            path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
@@ -903,26 +835,25 @@ if __name__ == "__main__":
     #                      path_save=path_save_file_loc_waves)
 
     # --------------------------------------TRAIN TEST SPLIT------------------------------------------------------------
-    # path_file_loc_waves = r'D:\Luan Van\Data\loc_waves\change_val_file_waves.csv'
-    #
-    # data_train_test(path_file_data=path_file_data_all, test_size=0.2,
-    #                 path_file_new_waves=path_file_loc_waves,
-    #                 full_or_part='full',
-    #                 path_save=path_save_train_test)
+    path_file_loc_waves = r'D:\Luan Van\Data\loc_waves\change_val_file_waves.csv'
+
+    Preprocessing_data(path_file_data=path_file_data_all,
+                       path_file_new_waves=path_file_loc_waves,
+                       full_or_part='full',
+                       path_save=path_save_train_test)
 
     # --------------------------------------PREPROCESS DATA-------------------------------------------------------------
-    # data_preprocess(path_train_test=path_save_train_test)
+    split_data(path_train_test=path_save_train_test, test_size=0.3, prepro_or_none='Prepro')
 
     # --------------------------------------REGRESSION DATA-------------------------------------------------------------
-    # data_predict_regression(model_regression='PLS',
-    #                         path_file_data=path_save_train_test,
-    #                         preprocess='Prepro')
+    data_predict_regression(model_regression='PLS',
+                            path_file_data=path_save_train_test)
 
     # --------------------------------------SPECTRUM PLOT---------------------------------------------------------------
-    path_save_prepro_spectrum = r'D:\Luan Van\Data\spectrum'
-
-    data_spectrum(name_file='Final_Data', path_file_data=path_folder_file_data_all,
-                  data_split='None', name_split_column='Days late', name_value_split='2 days',
-                  path_spectrum=path_save_prepro_spectrum, save_or_none='None',
-                  name_column='Position', list_data=['Mid of Segments', 'Mid of 2 Segments'],
-                  non_prepro='None')
+    # path_save_prepro_spectrum = r'D:\Luan Van\Data\spectrum'
+    #
+    # data_spectrum(name_file='Final_Data', path_file_data=path_folder_file_data_all,
+    #               data_split='None', name_split_column='Days late', name_value_split='1 day',
+    #               path_spectrum=path_save_prepro_spectrum, save_or_none='None',
+    #               name_column='Position', list_data=['Mid of Segments', 'Mid of 2 Segments'],
+    #               non_prepro='None')
