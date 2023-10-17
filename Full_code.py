@@ -72,19 +72,19 @@ class data_excel:
         self.name_data, self.data_main = Get_data(self.path_folder)
 
         # get data first column và cột thứ 4
-        self.listWavelength = self.data_main.values[0:228, 0].tolist()
+        self.listWavelength = self.data_main.values[0:127, 0].tolist()
 
         # column to row function change_shape
         self.data_main = Change_shape(self.data_main)
         self.data_main = pd.DataFrame(self.data_main)
 
         # data_calib = change_shape(calib)
-        self.data_main.drop(self.data_main.columns[228:], axis=1, inplace=True)
+        self.data_main.drop(self.data_main.columns[127:], axis=1, inplace=True)
 
         # Drop data Calib
         self.data_calib = pd.read_csv(fr"{path_calib_file}")
         self.data_calib = pd.DataFrame(self.data_calib)
-        self.data_calib.drop(self.data_calib.columns[228:], axis=1, inplace=True)
+        self.data_calib.drop(self.data_calib.columns[127:], axis=1, inplace=True)
         self.data_calib = self.data_calib.T
 
         # Tinh gia tri reference
@@ -807,23 +807,23 @@ class data_spectrum:
 # chay chuong trinh
 if __name__ == "__main__":
     # path data excel
-    path_file_data_all = r'D:\Luan Van\Data\Final_Data\Final_Data.csv'
+    path_file_data_all = r'D:\Luan Van\Data\Final_Data\Final_Data_v2.csv'
     path_folder_file_data_all = r'D:\Luan Van\Data\Final_Data'
 
     # path save
     path_save_train_test = r'D:\Luan Van\Data\train_test'
 
     # --------------------------------------EXPORT DATA-----------------------------------------------------------------
-    # path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
-    # folder_sensor = r'D:\Luan Van\data_sensor\2023-09-30'
-    # path_folder_save = r'D:\Luan Van\Data\Demo_Data'
-    #
-    # data_excel(file_name='Demo_Data_300923_full-waves',
-    #            path_folder_sensor=folder_sensor,
-    #            path_save=path_folder_save,
-    #            path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
-    #                                                     'Point', 'Position', 'Number'],
-    #            Cultivar_name='QD')
+    path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
+    folder_sensor = r'D:\Luan Van\data_sensor\2023-09-30'
+    path_folder_save = r'D:\Luan Van\Data\Demo_Data'
+
+    data_excel(file_name='New_Data_300923',
+               path_folder_sensor=folder_sensor,
+               path_save=path_folder_save,
+               path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
+                                                        'Point', 'Position', 'Number'],
+               Cultivar_name='QD')
 
     # --------------------------------------FIND BEST WAVES-------------------------------------------------------------
     # path_save_file_loc_waves = r'D:\Luan Van\Data\loc_waves'

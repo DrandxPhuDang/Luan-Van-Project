@@ -6,7 +6,7 @@ import numpy as np
 path = r'D:\Luan Van\Data\Final_Data'
 # nhap ten thu muc cua 1 dot do
 
-namefolder = 'Final_Data'
+namefolder = 'Final_All_Data'
 # nhap cot bat dau ve (cot chua buoc song)
 startcol = 13
 read_data = pd.read_csv(path + fr'\{namefolder}.csv', sep=',')
@@ -17,8 +17,8 @@ df = pd.DataFrame(read_data)
 
 Position1 = df[df['Position'] == 'Mid of Segments']
 Position2 = df[df['Position'] == 'Mid of 2 Segments']
-# Position3 = df[df['Number'] == 3]
-# Position4 = df[df['Number'] == 4]
+# Position3 = df[df['Position'] == 'C']
+# Position4 = df[df['Position'] == 'D']
 
 
 def plot(ax, data, start, title):
