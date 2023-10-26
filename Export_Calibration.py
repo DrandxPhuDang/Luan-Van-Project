@@ -3,8 +3,8 @@ import numpy as np
 import os
 
 path_folder = r'D:\Luan Van\data_sensor\Calib\2023-09-21'
-pathsavefile = r'D:\Luan Van\data_sensor\Calib\signal_data_calibration.csv'
-path = r'D:\Luan Van\data_sensor\Calib\final_data_calibration.csv'
+pathsavefile = r'D:\Luan Van\data_sensor\Calib\signal_data_calibration (25-10-2023).csv'
+path = r'D:\Luan Van\data_sensor\Calib\final_data_calibration (25-10-2023).csv'
 
 
 def get_Data(path):
@@ -114,7 +114,7 @@ for v in listWavelegh:
     len_mylist = len(mylist)
     for n in mylist:
         answer += n
-    answer = answer / 20
+    answer = answer / 30
     answer = round(answer)
     list_tb_cong.append([answer])
 

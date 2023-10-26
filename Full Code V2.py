@@ -1,32 +1,48 @@
 from Training_model import Regression_predict
-from Export_Data_CSV import Export_Data
-from Spectrum_Plot import Spectrum_Plot_Data
+from Export_Data import Export_Data
+from Spectrum_Plot import Spectrum_plot
 
-
-# chay chuong trinh
+# Running Program
 if __name__ == "__main__":
-    # Import Data
+    '''Define'''
     Path_File_Data = fr'D:\Luan Van\Data\Final_Data\Final_All_Data.csv'
 
     # ----------------------------------------------- Export Data CSV ------------------------------------------------
-    # path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
-    # folder_sensor = r'D:\Luan Van\data_sensor\2023-10-02'
-    # path_folder_save = r'D:\Luan Van\Data\Demo_Data'
-    #
-    # # parameter: [file_name, path_folder_sensor, path_save, path_calib_file, list_column, Cultivar_name]
-    # Export_Data(file_name='New_Demo_Data_021023',
-    #             path_folder_sensor=folder_sensor,
-    #             path_save=path_folder_save,
-    #             path_calib_file=path_calib, list_column=['Ratio', 'Acid', 'Brix', 'Date',
-    #                                                      'Point', 'Position', 'Number'],
-    #             Cultivar_name='Cultivar')
+    path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration (25-10-2023).csv'
+    folder_sensor = r'D:\Luan Van\data_sensor\2023-10-16'
+    path_folder_save = r'D:\Luan Van\Data\Demo_Data'
+
+    ''' Parameter of Export_Data: 
+    [file_name, path_folder_sensor, path_save, path_calib_file, list_column, Cultivar_name]
+    '''
+
+    # Export_Data(file_name='DATA_16102023', path_folder_sensor=folder_sensor, path_save=path_folder_save,
+    #             path_calib_file=path_calib, Cultivar_name='Cultivar',
+    #             list_column=['Ratio', 'Acid', 'Brix', 'Date', 'Point', 'Position', 'Number'])
 
     # ----------------------------------------------- Predicted Program ------------------------------------------------
-    # model_regression: [SVR, RF, PLS, ANN, R, L, XGB and Stacking]
-    # prepro_or_none: [None, Prepro]
-    # find_best_parameter: [None, Find]
-    # Tải model từ file
+    ''' Parameter of Regression_predict
+    model_regression: [
+            SVR, RF, PLS, ANN(Neural), R(Ridge),L(Lasso, XGB(XG_boost), KNN, GBR(GradientBoosting), 
+            DT(Decision Tree), LR(Linear) and Stacking
+    ],
+    prepro_or_none: [
+            None, Prepro
+    ],
+    find_best_parameter: [
+            None, Find
+    ]'''
+    #
+    Regression_predict(path_file_data=Path_File_Data, test_size=0.2,
+                       model_regression='PLS', prepro_data="Prepro",
+                       find_best_parameter="Find")
 
-    Regression_predict(path_file_data=Path_File_Data, test_size=0.3,
-                       model_regression="SVR", prepro_data="Prepro", find_best_parameter="None")
+    # ----------------------------------------------- Spectrum Plot ----------------------------------------------------
+    Path_save_spectrum = r"D:\Luan Van\Data\spectrum"
 
+    ''' Parameter of Spectrum_plot 
+    [path_file_data, start_col(start column of wavelength), path_save_spectrum, save_or_none]
+    '''
+
+    # Spectrum_plot(path_file_data=Path_File_Data, start_col=13, path_save_spectrum=Path_save_spectrum,
+    #               save_or_none="Save")

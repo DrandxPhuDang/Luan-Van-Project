@@ -1,22 +1,22 @@
 import math
-import pickle
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from sklearn.cross_decomposition import PLSRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor, StackingRegressor, GradientBoostingRegressor
+from sklearn.linear_model import Ridge, LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
-from sklearn.preprocessing import scale, StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn import preprocessing
 from kennard_stone import train_test_split
-from sklearn.decomposition import PCA
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.svm import SVR
 import xgboost as xgb
-from joblib import dump
+from sklearn.tree import DecisionTreeRegressor
+from GridSearch_Model import Gridsearch_ann, Gridsearch_rf, Gridsearch_svr, Gridsearch_r, Gridsearch_knn, \
+    Gridsearch_dt, Gridsearch_pls, Gridsearch_xgb, Gridsearch_gbr, Gridsearch_lr, Gridsearch_l
 
 
 class Regression_predict:
@@ -25,7 +25,7 @@ class Regression_predict:
         # tao bien dung chung
         super().__init__()
         # ------------------------------------------------- Import Data ------------------------------------------------
-        # get data
+        '''get data'''
         df = pd.read_csv(path_file_data)
         list_features = df.iloc[:0, 12:]
         features = [f'{e}' for e in list_features]
@@ -33,7 +33,8 @@ class Regression_predict:
         y = df['Brix']
 
         # ----------------------------------------------- Function defined ---------------------------------------------
-        # Function Preprocessing Data
+        '''Function Preprocessing Data'''
+
         def preprocessing_data(X_data):
             X_data = pd.DataFrame(X_data).dropna()
             # Fill in missing values using mean imputation
@@ -53,25 +54,23 @@ class Regression_predict:
             return X_data
 
         # ----------------------------------------------- Preprocessing Data -------------------------------------------
-        # Preprocessing or not Preprocessing
+        '''Preprocessing or not Preprocessing'''
         if prepro_data == "Prepro":
-            # PCA for Dimensional reduction data
-            pca = PCA()
-            pca.fit_transform(scale(X))
-            # Preprocessing data
             X = preprocessing_data(X)
-            # Train test split
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size)
-            # Fit on PCA
-            self.X_reduced_train = pca.fit_transform(scale(self.X_train))
-            self.X_reduced_test = pca.transform(scale(self.X_test))
+            self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(self.X_train, self.y_train,
+                                                                                  test_size=0.2)
+            scaler_nor = StandardScaler()
+            self.X_train = scaler_nor.fit_transform(self.X_train)
+            self.X_val = scaler_nor.transform(self.X_val)
+            self.X_test = scaler_nor.transform(self.X_test)
         if prepro_data == "None":
-            # Train test split
-            self.X_reduced_train, self.X_reduced_test, self.y_train, self.y_test = train_test_split(X, y,
-                                                                                                    test_size=test_size)
+            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size)
+            self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(self.X_train, self.y_train,
+                                                                                  test_size=0.2)
 
         # ----------------------------------------------- Notice Model Input -------------------------------------------
-        list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS"]
+        list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS", "GBR", "KNN", "DT", "LR"]
         cnt = 0
         for model in list_model:
             cnt += 1
@@ -82,78 +81,237 @@ class Regression_predict:
             else:
                 if cnt == len(list_model):
                     print(f"Notice: Model {model_regression} regression is not available")
-                    print(f"Notice: Available model are: SVR, RF, GR, ANN, Stacking ")
+                    print(f"Available model: SVR, RF, PLS, ANN, R, XGB, PLS, DT, LR, KNN, GBR and Stacking")
+
+        # ---------------------------------------- KNeighbor Regression ------------------------------------------------
+        '''K_Neighbor regression'''
+        if model_regression == "KNN":
+            name_model = 'K_Neighbor'
+            if find_best_parameter == "Find":
+                best_model_knn = Gridsearch_knn(self.X_val, self.y_val)
+                print('n_neighbors:', best_model_knn.best_params_["n_neighbors"])
+                print('leaf_size:', best_model_knn.best_params_["leaf_size"])
+                print('Best score:', best_model_knn.best_score_)
+                self.model = best_model_knn.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = KNeighborsRegressor()
+                self.model.fit(self.X_train, self.y_train)
+
+        # ------------------------------------------- GB Regression -------------------------------------------------
+        '''Gradient boosting regression'''
+        if model_regression == "GBR":
+            name_model = 'Gradient Boosting'
+            if find_best_parameter == "Find":
+                best_model_gbr = Gridsearch_gbr(self.X_val, self.y_val)
+                print('n_estimators:', best_model_gbr.best_params_["n_estimators"])
+                print('learning_rate:', best_model_gbr.best_params_["learning_rate"])
+                print('max_depth:', best_model_gbr.best_params_["max_depth"])
+                print('Best score:', best_model_gbr.best_score_)
+                self.model = best_model_gbr.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = GradientBoostingRegressor()
+                self.model.fit(self.X_train, self.y_train)
 
         # ------------------------------------------- PLS Regression -------------------------------------------------
+        '''PLS regression'''
         if model_regression == "PLS":
-            self.model = PLSRegression(n_components=120)
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'PLS'
+            list_len_features = []
+            for value in range(1, len(features)):
+                list_len_features.append(value)
+            if find_best_parameter == "Find":
+                best_model_pls = Gridsearch_pls(self.X_val, self.y_val, features=features)
+                print('n_components:', best_model_pls.best_params_["n_components"])
+                print('Best score:', best_model_pls.best_score_)
+                self.model = best_model_pls.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = PLSRegression()
+                self.model.fit(self.X_train, self.y_train)
 
         # ------------------------------------------- Ridge Regression -------------------------------------------------
+        '''Ridge regression'''
         if model_regression == "R":
-            self.model = Ridge(alpha=24)
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'Ridge'
+            if find_best_parameter == "Find":
+                best_model_r = Gridsearch_r(self.X_val, self.y_val)
+                print('alpha:', best_model_r.best_params_["alpha"])
+                print('Best score: ', best_model_r.best_score_)
+                self.model = best_model_r.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = Ridge()
+                self.model.fit(self.X_train, self.y_train)
 
         # ------------------------------------------- Lasso Regression -------------------------------------------------
+        '''Lasso regression'''
         if model_regression == "L":
-            self.model = Lasso(alpha=0.01)
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'Lasso'
+            if find_best_parameter == "Find":
+                best_model_l = Gridsearch_l(self.X_val, self.y_val)
+                print('alpha:', best_model_l.best_params_["alpha"])
+                print('Best score: ', best_model_l.best_score_)
+                self.model = best_model_l.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = Ridge()
+                self.model.fit(self.X_train, self.y_train)
 
         # ---------------------------------------------- XG_boost ------------------------------------------------------
+        '''XGBoost regression'''
         if model_regression == "XGB":
-            self.model = xgb.XGBRegressor(n_estimators=100, max_depth=10, eta=0.01,
-                                          subsample=0.7, colsample_bytree=1)
-
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'XGBoost'
+            if find_best_parameter == "Find":
+                best_model_xgb = Gridsearch_xgb(self.X_val, self.y_val)
+                print('learning_rate:', best_model_xgb.best_params_["learning_rate"])
+                print('max_depth:', best_model_xgb.best_params_["max_depth"])
+                print('colsample_bytree:', best_model_xgb.best_params_["colsample_bytree"])
+                print('n_estimators:', best_model_xgb.best_params_["n_estimators"])
+                print('Best score:', best_model_xgb.best_score_)
+                self.model = best_model_xgb.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = xgb.XGBRegressor()
+                self.model.fit(self.X_train, self.y_train)
 
         # -------------------------------------------- Neural ANN ------------------------------------------------------
+        '''MLP regression'''
         if model_regression == "ANN":
-            if prepro_data == "None":
-                scaler = StandardScaler()
-                self.X_reduced_train = scaler.fit_transform(self.X_reduced_train)
-                self.X_reduced_test = scaler.transform(self.X_reduced_test)
-            self.model = MLPRegressor(
-                activation='logistic',
-                hidden_layer_sizes=(800, 175),
-                alpha=0.001,
-                random_state=20,
-                early_stopping=False,
-                solver='adam'
-            )
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'MLP'
+            if find_best_parameter == "Find":
+                best_model_ann = Gridsearch_ann(self.X_val, self.y_val)
+                print('hidden_layer_sizes:', best_model_ann.best_params_["hidden_layer_sizes"])
+                print('alpha:', best_model_ann.best_params_["alpha"])
+                print('Best score:', best_model_ann.best_score_)
+                self.model = best_model_ann.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+
+            if find_best_parameter == "None":
+                self.model = MLPRegressor()
+                self.model.fit(self.X_train, self.y_train)
 
         # --------------------------------------------- Support Vector Machine -----------------------------------------
-        # Support vector regression
+        '''Support vector regression'''
         if model_regression == "SVR":
-            self.model = SVR(kernel='rbf', C=2, epsilon=0.01)
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'Support Vector'
+            if find_best_parameter == "Find":
+                best_model_svr = Gridsearch_svr(self.X_val, self.y_val)
+                print('C:', best_model_svr.best_params_["C"])
+                print('epsilon:', best_model_svr.best_params_["epsilon"])
+                print('degree:', best_model_svr.best_params_["degree"])
+                print('cache_size:', best_model_svr.best_params_["cache_size"])
+                print('Best score:', best_model_svr.best_score_)
+                self.model = best_model_svr.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+
+            if find_best_parameter == "None":
+                self.model = SVR()
+                self.model.fit(self.X_train, self.y_train)
 
         # ------------------------------------------- Random Forest Regression -----------------------------------------
-        # Random Forest Regression
+        '''Random Forest Regression'''
         if model_regression == "RF":
-            self.model = RandomForestRegressor(n_estimators=70, random_state=42, max_depth=5)
-            self.model.fit(self.X_reduced_train, self.y_train)
+            name_model = 'Random Forest'
+            if find_best_parameter == "Find":
+                best_model_rf = Gridsearch_rf(self.X_val, self.y_val)
+                print('n_estimators:', best_model_rf.best_params_["n_estimators"])
+                print('max_depth:', best_model_rf.best_params_["max_depth"])
+                print('Best score:', best_model_rf.best_score_)
+                self.model = best_model_rf.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+
+            if find_best_parameter == "None":
+                self.model = RandomForestRegressor(random_state=42)
+                self.model.fit(self.X_train, self.y_train)
+
+        # ------------------------------------------- Decision Tree Regression -----------------------------------------
+        '''Decision Tree Regression'''
+        if model_regression == "DT":
+            name_model = 'Decision Tree'
+            if find_best_parameter == "Find":
+                best_model_dt = Gridsearch_dt(self.X_val, self.y_val)
+                print('criterion:', best_model_dt.best_params_["criterion"])
+                print('max_depth:', best_model_dt.best_params_["max_depth"])
+                print('min_samples_split:', best_model_dt.best_params_["min_samples_split"])
+                print('max_leaf_nodes:', best_model_dt.best_params_["max_leaf_nodes"])
+                print('Best score:', best_model_dt.best_score_)
+                self.model = best_model_dt.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+
+            if find_best_parameter == "None":
+                self.model = DecisionTreeRegressor()
+                self.model.fit(self.X_train, self.y_train)
+
+        # ------------------------------------------- Linear Regression ------------------------------------------------
+        '''Linear Regression'''
+        if model_regression == "LR":
+            name_model = 'Linear'
+            if find_best_parameter == "Find":
+                best_model_lr = Gridsearch_lr(self.X_val, self.y_val)
+                print('fit_intercept:', best_model_lr.best_params_["fit_intercept"])
+                print('Best score:', best_model_lr.best_score_)
+                self.model = best_model_lr.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            if find_best_parameter == "None":
+                self.model = LinearRegression()
+                self.model.fit(self.X_train, self.y_train)
 
         # ------------------------------------------- Stacking Regression ----------------------------------------------
-        # Stacking regression (SVR, RF, GR) => RF (main model)
+        '''Stacking regression'''
         if model_regression == "Stacking":
-            # Using grid_search or not
-            if find_best_parameter == "None":
-                pass
+            name_model = 'Stacking'
             if find_best_parameter == "Find":
-                pass
+                # -------------------------------------- Grid Search ---------------------------------------------------
+                best_model_xgb = Gridsearch_xgb(self.X_train, self.y_train)
+                best_model_rf = Gridsearch_rf(self.X_val, self.y_val)
+                best_model_r = Gridsearch_r(self.X_val, self.y_val)
+                best_model_pls = Gridsearch_pls(self.X_val, self.y_val, features=features)
 
-        # ---------------------------------------------- Predicted Values ----------------------------------------------
+                # ----------------------------------- Print Best parameter ---------------------------------------------
+                print('--------------------------XGBoosting-----------------------------')
+                print('n_estimators:', best_model_xgb.best_params_["n_estimators"])
+                print('max_depth:', best_model_xgb.best_params_["max_depth"])
+                print('learning_rate:', best_model_xgb.best_params_["learning_rate"])
+                print('colsample_bytree:', best_model_xgb.best_params_["colsample_bytree"])
+                print('--------------------------Random Forest-----------------------------')
+                print('n_estimators:', best_model_rf.best_params_["n_estimators"])
+                print('max_depth:', best_model_rf.best_params_["max_depth"])
+                print('-------------------------Ridge-----------------------------')
+                print('alpha:', best_model_r.best_params_["alpha"])
+                print('-------------------------PLS------------------------------')
+                print('n_components:', best_model_pls.best_params_["n_components"])
+
+                # -------------------------------------- Running model -------------------------------------------------
+                base_models = [
+                    ('xbg', best_model_xgb.best_estimator_),
+                    ('rf', best_model_rf.best_estimator_),
+                    ('pls', best_model_pls.best_estimator_),
+
+                ]
+                self.model = best_model_r.best_estimator_
+                self.model = StackingRegressor(estimators=base_models, final_estimator=self.model,
+                                               cv=len(base_models))
+                self.model.fit(self.X_train, self.y_train)
+
+            if find_best_parameter == "None":
+                base_models = [
+                    ('pls', PLSRegression(n_components=len(features))),
+                    ('rf', RandomForestRegressor()),
+                ]
+
+                self.model = PLSRegression()
+                self.model = StackingRegressor(estimators=base_models, final_estimator=self.model,
+                                               cv=len(base_models))
+                self.model.fit(self.X_train, self.y_train)
+
         print(f"Successful Creating a {model_regression} model")
 
-        # Predicted Values
-        y_pred_test = self.model.predict(self.X_reduced_test)
-        y_pred_train = self.model.predict(self.X_reduced_train)
-        print("Evaluating Regression Models")
-
-        custom_path = r"D:\Luan Van/model_predicted.pkl"
-        with open(custom_path, 'wb') as file:
-            pickle.dump(self.model, file)
+        # ---------------------------------------------- Predicted Values ----------------------------------------------
+        '''Predicted Values'''
+        y_pred_test = self.model.predict(self.X_test)
+        y_pred_train = self.model.predict(self.X_train)
 
         # ------------------------------------------------ Print Score -------------------------------------------------
         def print_score(y_actual, y_predicted):
@@ -182,7 +340,7 @@ class Regression_predict:
             plt.scatter(y_actual, y_pred, label='Data')
             plt.xlabel('Actual Response')
             plt.ylabel('Predicted Response')
-            plt.title(f'Regression (R²={score_test[1]:.2f})')
+            plt.title(f'{name_model} Regression (R²={score_test[1]:.2f})')
             reg_pls = np.polyfit(y_actual, y_pred, deg=1)
             trend_pls = np.polyval(reg_pls, y_actual)
             plt.plot(y_actual, trend_pls, 'r', label='Line pred')
