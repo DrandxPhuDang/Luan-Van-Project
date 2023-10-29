@@ -35,7 +35,7 @@ class Regression_predict:
             X = preprocessing_data(X)
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size)
             self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(self.X_train, self.y_train,
-                                                                                  test_size=0.1)
+                                                                                  test_size=0.2)
 
         if prepro_data == "None":
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size)
@@ -244,7 +244,7 @@ class Regression_predict:
                 best_model_xgb = Gridsearch_xgb(self.X_val, self.y_val)
                 best_model_rf = Gridsearch_rf(self.X_val, self.y_val)
                 best_model_r = Gridsearch_r(self.X_val, self.y_val)
-                best_model_pls = Gridsearch_pls(self.X_val, self.y_val, features=features)
+                best_model_pls = Gridsearch_pls(self.X_val, self.y_val, features=self.X_train.iloc[0, 0:])
 
                 # ----------------------------------- Print Best parameter ---------------------------------------------
                 print('--------------------------XGBoosting-----------------------------')
@@ -273,7 +273,7 @@ class Regression_predict:
 
             if find_best_parameter == "None":
                 base_models = [
-                    ('pls', PLSRegression(n_components=len(features))),
+                    ('pls', PLSRegression()),
                     ('rf', RandomForestRegressor()),
                     ('xgb', xgb.XGBRegressor())
                 ]

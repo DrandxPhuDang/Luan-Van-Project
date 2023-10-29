@@ -36,7 +36,7 @@ if __name__ == "__main__":
     ]'''
     #
     Regression_predict(path_file_data=Path_File_Data, test_size=0.2,
-                       model_regression='R', prepro_data="Prepro",
+                       model_regression='PLS', prepro_data="Prepro",
                        find_best_parameter="Find", kernel_pca="None")
 
     # ----------------------------------------------- Spectrum Plot ----------------------------------------------------
