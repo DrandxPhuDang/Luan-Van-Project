@@ -35,9 +35,9 @@ if __name__ == "__main__":
             None, Find
     ]'''
     #
-    # Regression_predict(path_file_data=Path_File_Data, test_size=0.2,
-    #                    model_regression='R', prepro_data="Prepro",
-    #                    find_best_parameter="Find", kernel_pca="None")
+    Regression_predict(path_file_data=Path_File_Data, test_size=0.2,
+                       model_regression='R', prepro_data="Prepro",
+                       find_best_parameter="Find", kernel_pca="None")
 
     # ----------------------------------------------- Spectrum Plot ----------------------------------------------------
     Path_save_spectrum = r"D:\Luan Van\Data\spectrum"
