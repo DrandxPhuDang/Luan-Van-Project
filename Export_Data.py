@@ -4,15 +4,17 @@ import pandas as pd
 
 
 class Export_Data:
-
     def __init__(self, file_name, path_folder_sensor, path_save, path_calib_file, list_column, Cultivar_name):
-        # tao bien dung chung
         super().__init__()
         self.path_folder = fr'{path_folder_sensor}'
         self.path_folder_save = fr'{path_save}'
         self.path_save_file = self.path_folder_save + fr'\{file_name}.csv'
 
         def Get_data(path):
+            """
+            :param path: Thư mục chứa các file csv từ cảm biến
+            :return: Trả về tên file và giá trị trong file
+            """
             os.chdir(path)
             files = sorted(os.listdir(path))
             name_csv = []
@@ -26,6 +28,10 @@ class Export_Data:
             return name_csv, df
 
         def Change_shape(data):
+            """
+            :param data: Chuyển đổi shape của giá trị từ dọc thành ngang
+            :return: trả về dataframe chứa các giá trị đã chuyển
+            """
             file = pd.DataFrame()
             i = 0
             srange = range(0, len(data['Sample Signal (unitless)']), 228)
@@ -35,6 +41,11 @@ class Export_Data:
             return file
 
         def Reference(calib_data, signal_data):
+            """
+            :param calib_data: Nhập giá trị từ file calibration (Final.... .cvs)
+            :param signal_data: Nhập giá trị cột signal của file csv cảm biến
+            :return: Giá trị đã tính toán với công thức là signal/calib
+            """
             bien_dem = 0
             values_calib = []
             values_calib_2 = []
@@ -50,37 +61,22 @@ class Export_Data:
                 values_calib = []
             return values_calib_2
 
-        # get data from csv sensor
         self.name_data, self.data_main = Get_data(self.path_folder)
-
-        # get data first column và cột thứ 4
         self.listWavelength = self.data_main.values[0:125, 0].tolist()
-
-        # column to row function change_shape
         self.data_main = Change_shape(self.data_main)
         self.data_main = pd.DataFrame(self.data_main)
-
-        # data_calib = change_shape(calib)
         self.data_main.drop(self.data_main.columns[125:], axis=1, inplace=True)
-
-        # Drop data Calib
         self.data_calib = pd.read_csv(fr"{path_calib_file}")
         self.data_calib = pd.DataFrame(self.data_calib)
         self.data_calib.drop(self.data_calib.columns[125:], axis=1, inplace=True)
         self.data_calib = self.data_calib.T
-
-        # Tinh gia tri reference
         self.data_ref = Reference(self.data_calib, self.data_main)
-
-        # List to array
-        self.data_ref = np.array(self.data_ref)
-
-        # data to dataframe
-        self.final_Data = pd.DataFrame(self.data_ref, columns=self.listWavelength)
+        self.final_Data = pd.DataFrame(np.array(self.data_ref), columns=self.listWavelength)
 
         def export_excel():
-            # export excel
-
+            """
+            :return: Hàm xử lí pandas chèn tên cột và các giá trị tương ứng
+            """
             Cultivar = []
             Date = []
             Brix = []
@@ -112,7 +108,6 @@ class Export_Data:
                     Acid.append(name[1])
                     Ratio.append(name[1])
 
-            # Export Data Excel
             dem = 0
             for i in list_column:
                 for clib in range(dem, len(list_all)):
@@ -121,7 +116,6 @@ class Export_Data:
                 dem += 1
 
             self.final_Data.insert(loc=0, column=f'{Cultivar_name}', value=Cultivar)
-
             self.final_Data.to_csv(self.path_save_file, index=False, header=True, na_rep='Unknown')
 
             print(f'Successful export data excel to {self.path_folder_save}')
