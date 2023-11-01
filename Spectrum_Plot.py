@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.signal import savgol_filter
 
 
 class Spectrum_plot:
@@ -11,13 +12,12 @@ class Spectrum_plot:
 
         # df1 = df[df['Number'] == 1]
 
-        Position1 = df[df['Position'] == 'A']
-        Position2 = df[df['Position'] == 'B']
-        Position3 = df[df['Position'] == 'C']
-        Position4 = df[df['Position'] == 'D']
+        Position1 = df[df['Position'] == 'Mid of Segments']
+        Position2 = df[df['Position'] == 'Mid of 2 Segments']
 
         def plot(ax_plot, data, start, title):
             y = data.values[:, start - 1:]
+            y = savgol_filter(y, 11, polyorder=2, deriv=0)
             row, _ = y.shape  # so hang cua bo du lieu
             str_x = data.columns.values[start - 1:]
             fmx = []
@@ -31,6 +31,7 @@ class Spectrum_plot:
 
         def plot_mean(data, label, start):
             y = data.values[:, start - 1:]
+            y = savgol_filter(y, 11, polyorder=2, deriv=0)
             y_mean = np.mean(y, axis=0)
             str_x = data.columns.values[start - 1:]
             fmx = []
@@ -42,13 +43,12 @@ class Spectrum_plot:
             ax_plot.set_ylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
 
         # -----------------------------------------------------------------------
-        fig, ax = plt.subplots(2, 2, figsize=(14, 7))
+        # fig, ax = plt.subplots(2, 2, figsize=(14, 7))
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 7))
         fig.suptitle('Spectrum ', fontsize=19, fontweight='bold')
         plt.subplots_adjust(left=0.076, right=0.96)
-        plot(ax[0, 0], Position1, start=start_col, title='A')
-        plot(ax[0, 1], Position2, start=start_col, title='B')
-        plot(ax[1, 0], Position3, start=start_col, title='C')
-        plot(ax[1, 1], Position4, start=start_col, title='D')
+        plot(ax1, Position1, start=start_col, title='Mid of Segments')
+        plot(ax2, Position2, start=start_col, title='Mid of 2 Segments')
 
         fig.supxlabel('Wavelength(nm)', fontsize=15, fontweight='bold')
         fig.supylabel('Intensity(a.u)', fontsize=15, fontweight='bold')
@@ -57,12 +57,10 @@ class Spectrum_plot:
         if save_or_none == 'None':
             pass
         # -----------------------------------------------------------------------
-        plt.figure(figsize=(10, 7))
+        plt.figure(figsize=(14, 7))
         plt.title('Mean Spectrum ', fontsize=19, fontweight='bold')
-        plot_mean(Position1, start=start_col, label='A')
-        plot_mean(Position2, start=start_col, label='B')
-        plot_mean(Position3, start=start_col, label='C')
-        plot_mean(Position4, start=start_col, label='D')
+        plot_mean(Position1, start=start_col, label='Mid of Segments')
+        plot_mean(Position2, start=start_col, label='Mid of 2 Segments')
 
         if save_or_none == 'Save':
             plt.savefig(path_save_spectrum + r'\Mean Spectrum ' + '.png')

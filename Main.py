@@ -25,19 +25,23 @@ if __name__ == "__main__":
     # ----------------------------------------------- Predicted Program ------------------------------------------------
     ''' Parameter of Regression_predict
     model_regression: [
-            SVR, RF, PLS, ANN(Neural), R(Ridge),L(Lasso, XGB(XG_boost), KNN, GBR(GradientBoosting), 
+            SVR, RF, PLS, ANN(Neural), R(Ridge),L(Lasso), XGB(XG_boost), KNN, GBR(GradientBoosting), 
             DT(Decision Tree), LR(Linear) and Stacking
     ],
     prepro_or_none: [
-            None, Prepro
+            True, False
     ],
     find_best_parameter: [
             None, Find
-    ]'''
-    #
-    Regression_predict(path_file_data=Path_File_Data, test_size=0.2,
-                       model_regression='PLS', prepro_data="Prepro",
-                       find_best_parameter="Find", kernel_pca="None")
+    ],
+    kernel_pca: [
+            True, False
+    ],
+    '''
+
+    Regression_predict(path_file_data=Path_File_Data, start_col_X=12, test_size=0.2,
+                       model_regression='R', prepro_data=True,
+                       find_best_parameter=True, kernel_pca=None)
 
     # ----------------------------------------------- Spectrum Plot ----------------------------------------------------
     Path_save_spectrum = r"D:\Luan Van\Data\spectrum"

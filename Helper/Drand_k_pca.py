@@ -15,7 +15,6 @@ def k_pca_reduce(X, y, features):
     các tham số trong param_grid không cần thay đổi nếu không cần thiết
     """
     print('Running Kernel PCA Reduce')
-    k_fold = KFold(n_splits=10, shuffle=True, random_state=42)
     pipeline = Pipeline([
         ('k_pca', KernelPCA()),
         ('svm', SVR())
@@ -24,7 +23,7 @@ def k_pca_reduce(X, y, features):
         'k_pca__n_components': np.arange(1, len(features), 1),
         'k_pca__kernel': ['linear', 'rbf', 'sigmoid']
     }
-    grid_search = GridSearchCV(pipeline, param_grid, cv=k_fold, verbose=0)
+    grid_search = GridSearchCV(pipeline, param_grid, cv=10, verbose=0)
     grid_search.fit(X, y)
     k_pca = KernelPCA(n_components=grid_search.best_params_["k_pca__n_components"],
                       kernel=grid_search.best_params_["k_pca__kernel"])

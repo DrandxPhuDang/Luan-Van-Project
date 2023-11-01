@@ -9,6 +9,7 @@ from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 import xgboost as xgb
 
+
 """
     Tổng hợp các model sử dụng grid_search, các parameter đã tham khảo tài liệu và lựa chọn tối ưu
     __Write by Drand__
@@ -24,12 +25,7 @@ def Gridsearch_ann(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_ann = {
-        'hidden_layer_sizes': [(16, 16), (32, 16), (64, 16), (128, 16), (256, 16), (512, 16),
-                               (16, 32), (32, 32), (64, 32), (128, 32), (256, 32), (512, 32),
-                               (16, 64), (32, 64), (64, 64), (128, 64), (256, 64), (512, 64),
-                               (16, 128), (32, 128), (64, 128), (128, 128), (256, 128), (512, 128),
-                               (16, 256), (32, 256), (64, 256), (128, 256), (256, 256), (512, 256),
-                               (16, 512), (32, 512), (64, 512), (128, 512), (256, 512), (512, 512)],
+        'hidden_layer_sizes': [(16, 16), (32, 32), (64, 64)],
         'alpha': [0.0001, 0.001, 0.01, 0.1, 1]
     }
     ann = MLPRegressor(random_state=42, early_stopping=False)
@@ -47,7 +43,7 @@ def Gridsearch_rf(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_rf = {
-        'n_estimators': np.arange(10, 200, 10),
+        'n_estimators': np.arange(5, 200, 5),
         'max_depth': np.arange(2, 10, 2),
     }
     rf = RandomForestRegressor(random_state=42, bootstrap=True)
@@ -66,7 +62,6 @@ def Gridsearch_svr(X, y):
     param_grid_svr = {
         'C': np.arange(5, 300, 5),
         'epsilon': np.arange(0.05, 1, 0.05),
-        'degree': [1, 2, 3],
         'cache_size': np.arange(50, 200, 50),
     }
     svr = SVR(kernel='rbf', gamma='scale', shrinking=True)
@@ -99,9 +94,9 @@ def Gridsearch_l(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_l = {
-        'alpha': [0.001, 0.01, 0.1, 0.5, 1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+        'alpha': [0.001, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
     }
-    ls = Lasso()
+    ls = Lasso(tol=1e-2)
     grid_search_l = GridSearchCV(estimator=ls, param_grid=param_grid_l, cv=k_fold, verbose=0, n_jobs=-1,
                                  scoring='r2')
     grid_search_l.fit(X, y)
@@ -115,7 +110,7 @@ def Gridsearch_knn(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_knn = {
-        'n_neighbors': np.arange(2, 100, 2),
+        'n_neighbors': np.arange(5, 125, 5),
         'leaf_size': np.arange(2, 50, 2)
     }
     knn = KNeighborsRegressor(algorithm='auto')
@@ -132,14 +127,9 @@ def Gridsearch_dt(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_dt = {
-        'criterion': ['squared_error', 'absolute_error'],
         'max_depth': np.arange(2, 10, 2),
-        'min_samples_split': np.arange(2, 10, 2),
-        'max_leaf_nodes': np.arange(3, 30, 3)
     }
-    # Create a decision tree regressor
     dt = DecisionTreeRegressor()
-    # Perform grid search
     grid_search_dt = GridSearchCV(estimator=dt, param_grid=param_grid_dt, cv=k_fold, verbose=0, n_jobs=-1,
                                   scoring='r2')
     grid_search_dt.fit(X, y)
@@ -174,10 +164,8 @@ def Gridsearch_xgb(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_XGB = {
-        'learning_rate': [0.01, 0.1],
-        'max_depth': [3, 5, 7, 10],
-        'colsample_bytree': [0.5, 0.7],
-        'n_estimators': [100, 200, 500],
+        'max_depth': np.arange(2, 10, 2),
+        'n_estimators': np.arange(10, 200, 10),
     }
     XGB = xgb.XGBRegressor()
     grid_search_XGB = GridSearchCV(estimator=XGB, param_grid=param_grid_XGB, cv=k_fold, verbose=0, n_jobs=-1,
@@ -194,7 +182,6 @@ def Gridsearch_gbr(X, y):
     """
     param_grid_gbr = {
         'n_estimators': np.arange(5, 100, 5),
-        'learning_rate': np.arange(0.1, 1, 0.1),
         'max_depth': np.arange(2, 10, 2)
     }
     gbr = GradientBoostingRegressor(random_state=42)
