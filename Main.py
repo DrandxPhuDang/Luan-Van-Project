@@ -40,8 +40,8 @@ if __name__ == "__main__":
     '''
 
     Regression_predict(path_file_data=Path_File_Data, start_col_X=12, test_size=0.2,
-                       model_regression='R', prepro_data=True,
-                       find_best_parameter=True, kernel_pca=None)
+                       model_regression='Stacking', prepro_data=True,
+                       find_best_parameter=True, kernel_pca=False)
 
     # ----------------------------------------------- Spectrum Plot ----------------------------------------------------
     Path_save_spectrum = r"D:\Luan Van\Data\spectrum"

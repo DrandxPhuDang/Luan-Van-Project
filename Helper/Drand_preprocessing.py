@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.signal import savgol_filter
 from sklearn import preprocessing
+from sklearn.cross_decomposition import PLSRegression
 from sklearn.feature_selection import f_regression, SelectKBest
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
@@ -11,6 +12,7 @@ def preprocessing_data(X_data):
     """
     :param X_data: Nhập X_data cần tiền xử lí, nên dùng trước khi chia train_test
     :return: Trả về X_data_preprocessing
+    example: X = Preprocessing_data(X)
     """
     X_data = pd.DataFrame(X_data).dropna()
     X_data.fillna(X_data.mean(), inplace=True)
@@ -28,6 +30,7 @@ def msc_data(input_data):
     """
     :param input_data: X_data: Nhập X_data cần tiền xử lí, nên dùng trước khi chia train_test và tiền xử lí
     :return: Trả về giá trị đã msc
+    example: X = msc_data(X)
     """
     _ = np.finfo(np.float32).eps
     input_data = np.array(input_data, dtype=np.float64)
@@ -76,6 +79,17 @@ def remove_outliers_iqr(data, threshold, start_col, list_col_drop=None):
     return data_clean
 
 
+def remove_outliers_pls(X, y, n_components=2, threshold=3.0):
+    pls = PLSRegression(n_components=n_components)
+    pls.fit(X, y)
+    y_pred = pls.predict(X)
+    residuals = y - y_pred.flatten()
+    z_scores = np.abs((residuals - np.mean(residuals)) / np.std(residuals))
+    X_clean = X[z_scores <= threshold]
+    y_clean = y[z_scores <= threshold]
+    return X_clean, y_clean
+
+
 def mean_features(df, path_save_file, start_col):
     """
     :param df: File csv cần tính trung bình phổ
@@ -91,6 +105,8 @@ def mean_features(df, path_save_file, start_col):
             X_mean = df_mean[features_mean]
             y_mean = df_mean['Brix']
             return X_mean, y_mean, features_mean
+
+    Tính bước sóng trung bình dùng để cho bộ dữ liệu ngẫu nhiên đo 3 điểm, cần lấy dữ liệu phổ trung bình
     """
     list_features = df.iloc[:0, start_col:]
     features = [f'{e}' for e in list_features]

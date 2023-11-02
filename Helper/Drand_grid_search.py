@@ -13,6 +13,11 @@ import xgboost as xgb
 """
     Tổng hợp các model sử dụng grid_search, các parameter đã tham khảo tài liệu và lựa chọn tối ưu
     __Write by Drand__
+    example:    best_model_r = Gridsearch_r(self.X_val, self.y_val)
+                self.model = best_model_r.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+                print('Best_params_: ', best_model_r.best_params_)
+                
 """
 
 k_fold = KFold(n_splits=10, shuffle=True, random_state=42)

@@ -3,7 +3,6 @@ from sklearn.decomposition import KernelPCA
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVR
-from sklearn.model_selection import KFold
 
 
 def k_pca_reduce(X, y, features):
@@ -12,6 +11,8 @@ def k_pca_reduce(X, y, features):
     :param y: Nhập nên là y_train để giảm chiều (không cần fit_transform hay transform cho y_train)
     :param features: Nhập tất cả cột của X_data
     :return: trả về model tối ưu
+    example: self.X_train, self.X_val, self.X_test = reduce_kernel_pca(self.X_train, self.X_val, self.X_test,
+                                                            self.y_train, features_col=features, kernel_pca=kernel_pca)
     các tham số trong param_grid không cần thay đổi nếu không cần thiết
     """
     print('Running Kernel PCA Reduce')
@@ -27,7 +28,6 @@ def k_pca_reduce(X, y, features):
     grid_search.fit(X, y)
     k_pca = KernelPCA(n_components=grid_search.best_params_["k_pca__n_components"],
                       kernel=grid_search.best_params_["k_pca__kernel"])
-    print(grid_search.best_params_["k_pca__n_components"])
-    print(grid_search.best_params_["k_pca__kernel"])
-
+    print('Dimensions: ', grid_search.best_params_["k_pca__n_components"])
+    print('Kernel: ', grid_search.best_params_["k_pca__kernel"])
     return k_pca

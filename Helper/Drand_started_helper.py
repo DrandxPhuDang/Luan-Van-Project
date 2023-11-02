@@ -12,6 +12,8 @@ def get_data_X_y(df_all, start_col):
     :param df_all: Nhập vào data file csv
     :param start_col: Nhập vào số thứ tự của cột bắt đầu bước sóng
     :return: Trả về 3 giá trị, X là giá trị dãy bước sóng, y là giá trị brix, features là sách bước sóng
+    example: df = pd.read_csv(path_file_data)
+             X, y, features = get_data_X_y(df, start_col=start_col_X)
     """
     list_features = df_all.iloc[:0, start_col:]
     features_all = [f'{e}' for e in list_features]
@@ -21,6 +23,16 @@ def get_data_X_y(df_all, start_col):
 
 
 def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data):
+    """
+    :param X_data: Nhập vào X data
+    :param y_data: Nhập vào y data
+    :param test_size: Chọn test_size
+    :param prepro_data: Dùng để chọn dữ liệu có tiền xử lí hay không
+    :return: X_train, X_val, X_test, y_train, y_val, y_test, bộ dữ liệu được chia theo test_size, tệp val cố định bằng
+    20% tệp train
+    example; self.X_train, self.X_val, self.X_test, \
+            self.y_train, self.y_val, self.y_test = train_test_split_kennard_stone(X, y, test_size, prepro_data)
+    """
     global X_train, X_test, X_val, y_train, y_val, y_test
     if prepro_data is True:
         X_data = preprocessing_data(X_data)
@@ -33,6 +45,15 @@ def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data):
 
 
 def reduce_kernel_pca(X_fit, X_transform_1, X_transform_2, y_fit, features_col, kernel_pca):
+    """
+    :param X_fit: Nhập vào X dùng để học dữ liệu giảm chiều (X_train)
+    :param X_transform_1: Nhập vòa X cần transform theo dữ liệu tệp X_fit (X_val)
+    :param X_transform_2: Nhập vòa X cần transform theo dữ liệu tệp X_fit (X_test)
+    :param y_fit: Chạy giảm chiều Kernnel PCA
+    :param features_col: Số lượng cột ở tệp X
+    :param kernel_pca: Chọn xem có cần giảm chiều không
+    :return: Các dữ liệu đã Kernel PCA hoặc không
+    """
     if kernel_pca is True:
         k_pca = k_pca_reduce(X_fit, y_fit, features=features_col)
         X_fit = k_pca.fit_transform(X_fit)
@@ -44,6 +65,10 @@ def reduce_kernel_pca(X_fit, X_transform_1, X_transform_2, y_fit, features_col, 
 
 
 def warning(model_regression):
+    """
+    :param model_regression: Đưa vào tên model để check xem model này đã có trong bộ dữ liệu model không
+    :return: In ra các thông báo để kiểm tra
+    """
     list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS", "GBR", "KNN", "DT", "LR"]
     cnt = 0
     for model in list_model:
@@ -59,8 +84,15 @@ def warning(model_regression):
 
 
 def print_best_params(list_model):
+    """
+    :param list_model: Dãy model
+    :return: In ra các parameter tốt nhất theo tiêu chí R Square
+    """
     for model in list_model:
-        print(model.best_params_)
+        try:
+            print(model.best_params_)
+        except:
+            pass
 
 
 def print_score(y_actual, y_predicted):
