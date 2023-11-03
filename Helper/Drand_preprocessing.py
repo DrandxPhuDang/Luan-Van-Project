@@ -1,15 +1,20 @@
 import numpy as np
 import pandas as pd
+import xgboost
 from scipy.signal import savgol_filter
 from sklearn import preprocessing
 from sklearn.cross_decomposition import PLSRegression
-from sklearn.feature_selection import f_regression, SelectKBest
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
 
 
-def preprocessing_data(X_data):
+def preprocessing_data(X_data, windows_len=21, polyorder=2, deriv=1):
     """
+    :param windows_len: Nhập vào size cửa sổ trượt
+    :param deriv: Nhập vào thứ tự đạo hàm (default = 1)
+    :param polyorder: Nhập vào bậc đa thức (default = 2)
     :param X_data: Nhập X_data cần tiền xử lí, nên dùng trước khi chia train_test
     :return: Trả về X_data_preprocessing
     example: X = Preprocessing_data(X)
@@ -19,7 +24,7 @@ def preprocessing_data(X_data):
     X_data = preprocessing.normalize(X_data)
     prepro_normal_train = preprocessing.Normalizer().fit(X_data)
     X_data = prepro_normal_train.transform(X_data)
-    X_data = savgol_filter(X_data, 21, polyorder=2, deriv=1)
+    X_data = savgol_filter(X_data, windows_len, polyorder=polyorder, deriv=deriv)
     scaler_nor = StandardScaler()
     X_data = scaler_nor.fit_transform(X_data)
     X_data = pd.DataFrame(X_data)
@@ -50,7 +55,7 @@ def msc_data(input_data):
     return data_msc
 
 
-def remove_outliers_iqr(data, threshold, start_col, list_col_drop=None):
+def remove_outliers_iqr(data, threshold=2, start_col=9, list_col_drop=None):
     """
     :param data: Nhập vào data muốn loại outliers
     :param threshold: Giá trị phân ngưỡng
@@ -79,8 +84,8 @@ def remove_outliers_iqr(data, threshold, start_col, list_col_drop=None):
     return data_clean
 
 
-def remove_outliers_pls(X, y, n_components=2, threshold=3.0):
-    pls = PLSRegression(n_components=n_components)
+def remove_outliers_model(X, y, threshold=2, epsilon=0.3):
+    pls = SVR(epsilon=epsilon)
     pls.fit(X, y)
     y_pred = pls.predict(X)
     residuals = y - y_pred.flatten()

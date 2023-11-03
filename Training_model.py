@@ -1,8 +1,6 @@
-import pandas as pd
 from sklearn.ensemble import StackingRegressor
-from sklearn.preprocessing import StandardScaler
-
 from Helper.Drand_grid_search import *
+from Helper.Drand_preprocessing import *
 from Helper.Drand_started_helper import *
 
 
@@ -22,8 +20,27 @@ class Regression_predict:
         """ Reduce Features Data """
         self.X_train, self.X_val, self.X_test = reduce_kernel_pca(self.X_train, self.X_val, self.X_test, self.y_train,
                                                                   features_col=features, kernel_pca=kernel_pca)
+
+        # self.X_train, self.y_train = remove_outliers_model(self.X_train, self.y_train, threshold=2)
+        # self.X_val, self.y_val = remove_outliers_model(self.X_val, self.y_val, threshold=2)
+        # self.X_test, self.y_test = remove_outliers_model(self.X_test, self.y_test, threshold=2)
+
         """ warming Model Input """
         warning(model_regression=model_regression)
+        # ---------------------------------------- ExtraTrees Regressor ------------------------------------------------
+        '''ExtraTrees Regression'''
+        if model_regression == "ETR":
+            self.name_model = 'ExtraTrees'
+            '''Find best parameter or None'''
+            if find_best_parameter is True:
+                best_model_etr = Gridsearch_etr(self.X_val, self.y_val)
+                print(best_model_etr.best_params_)
+                print('Best score:', best_model_etr.best_score_)
+                self.model = best_model_etr.best_estimator_
+                self.model.fit(self.X_train, self.y_train)
+            else:
+                self.model = ExtraTreesRegressor()
+                self.model.fit(self.X_train, self.y_train)
 
         # ---------------------------------------- KNeighbor Regression ------------------------------------------------
         '''K_Neighbor Regression'''
@@ -211,18 +228,18 @@ class Regression_predict:
             '''Find best parameter or None'''
             if find_best_parameter is True:
                 '''Grid Search'''
-                best_model_rf = Gridsearch_rf(self.X_val, self.y_val)
+                best_model_etr = Gridsearch_etr(self.X_val, self.y_val)
                 best_model_r = Gridsearch_r(self.X_val, self.y_val)
                 best_model_xgb = Gridsearch_xgb(self.X_val, self.y_val)
                 best_model_pls = Gridsearch_pls(self.X_val, self.y_val, features=pd.DataFrame(self.X_train).iloc[0, 0:])
                 best_model_svr = Gridsearch_svr(self.X_val, self.y_val)
                 '''Print Best parameter'''
-                print_best_params([best_model_rf, best_model_r, best_model_xgb,
+                print_best_params([best_model_etr, best_model_r, best_model_xgb,
                                    best_model_pls, best_model_svr])
                 '''Fitting model'''
                 base_models = [
                     ('svr', best_model_svr.best_estimator_),
-                    ('rf', best_model_rf.best_estimator_),
+                    ('etr', best_model_etr.best_estimator_),
                     ('xgb', best_model_xgb.best_estimator_),
                     ('pls', best_model_pls.best_estimator_)
                 ]

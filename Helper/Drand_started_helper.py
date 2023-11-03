@@ -4,7 +4,7 @@ from kennard_stone import train_test_split
 from matplotlib import pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from Helper.Drand_k_pca import k_pca_reduce
-from Helper.Drand_preprocessing import preprocessing_data
+from Helper.Drand_preprocessing import preprocessing_data, msc_data
 
 
 def get_data_X_y(df_all, start_col):
@@ -69,7 +69,7 @@ def warning(model_regression):
     :param model_regression: Đưa vào tên model để check xem model này đã có trong bộ dữ liệu model không
     :return: In ra các thông báo để kiểm tra
     """
-    list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS", "GBR", "KNN", "DT", "LR"]
+    list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS", "GBR", "KNN", "DT", "LR", "ETR"]
     cnt = 0
     for model in list_model:
         cnt += 1

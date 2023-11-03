@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.cross_decomposition import PLSRegression
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.linear_model import Ridge, LinearRegression, Lasso
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neighbors import KNeighborsRegressor
@@ -48,7 +48,7 @@ def Gridsearch_rf(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_rf = {
-        'n_estimators': np.arange(5, 200, 5),
+        'n_estimators': np.arange(10, 200, 10),
         'max_depth': np.arange(2, 10, 2),
     }
     rf = RandomForestRegressor(random_state=42, bootstrap=True)
@@ -115,7 +115,7 @@ def Gridsearch_knn(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_knn = {
-        'n_neighbors': np.arange(5, 125, 5),
+        'n_neighbors': np.arange(5, 100, 5),
         'leaf_size': np.arange(2, 50, 2)
     }
     knn = KNeighborsRegressor(algorithm='auto')
@@ -186,7 +186,7 @@ def Gridsearch_gbr(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_gbr = {
-        'n_estimators': np.arange(5, 100, 5),
+        'n_estimators': np.arange(10, 200, 10),
         'max_depth': np.arange(2, 10, 2)
     }
     gbr = GradientBoostingRegressor(random_state=42)
@@ -210,3 +210,20 @@ def Gridsearch_lr(X, y):
                                   scoring='r2')
     grid_search_lr.fit(X, y)
     return grid_search_lr
+
+
+def Gridsearch_etr(X, y):
+    """
+    :param X: Nhập X để tìm tham số tối ưu thường là X_train hoặc X_val
+    :param y: Nhập y để tìm tham số tối ưu thường là y_train hoặc y_val
+    :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
+    """
+    param_grid_etr = {
+        'n_estimators': np.arange(10, 200, 10),
+        'max_depth': np.arange(2, 10, 2)
+    }
+    etr = ExtraTreesRegressor(random_state=42)
+    grid_search_etr = GridSearchCV(estimator=etr, param_grid=param_grid_etr, cv=k_fold, verbose=0, n_jobs=-1,
+                                   scoring='r2')
+    grid_search_etr.fit(X, y)
+    return grid_search_etr

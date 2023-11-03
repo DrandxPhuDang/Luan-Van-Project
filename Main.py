@@ -26,7 +26,7 @@ if __name__ == "__main__":
     ''' Parameter of Regression_predict
     model_regression: [
             SVR, RF, PLS, ANN(Neural), R(Ridge),L(Lasso), XGB(XG_boost), KNN, GBR(GradientBoosting), 
-            DT(Decision Tree), LR(Linear) and Stacking
+            DT(Decision Tree), LR(Linear), ETR and Stacking
     ],
     prepro_or_none: [
             True, False
