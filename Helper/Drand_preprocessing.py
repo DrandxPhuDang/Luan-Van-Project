@@ -1,12 +1,8 @@
 import numpy as np
 import pandas as pd
-import xgboost
 from scipy.signal import savgol_filter
 from sklearn import preprocessing
-from sklearn.cross_decomposition import PLSRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVR
 
 
@@ -25,8 +21,8 @@ def preprocessing_data(X_data, windows_len=21, polyorder=2, deriv=1):
     prepro_normal_train = preprocessing.Normalizer().fit(X_data)
     X_data = prepro_normal_train.transform(X_data)
     X_data = savgol_filter(X_data, windows_len, polyorder=polyorder, deriv=deriv)
-    scaler_nor = StandardScaler()
-    X_data = scaler_nor.fit_transform(X_data)
+    scaler_mm = MinMaxScaler()
+    X_data = scaler_mm.fit_transform(X_data)
     X_data = pd.DataFrame(X_data)
     return X_data
 
@@ -84,67 +80,12 @@ def remove_outliers_iqr(data, threshold=2, start_col=9, list_col_drop=None):
     return data_clean
 
 
-def remove_outliers_model(X, y, threshold=2, epsilon=0.3):
-    pls = SVR(epsilon=epsilon)
-    pls.fit(X, y)
-    y_pred = pls.predict(X)
+def remove_outliers_model(X, y, threshold=2, epsilon=0.25, cache_size=50, C=5, kernel='rbf'):
+    model = SVR(epsilon=epsilon, cache_size=cache_size, C=C, kernel=kernel)
+    model.fit(X, y)
+    y_pred = model.predict(X)
     residuals = y - y_pred.flatten()
     z_scores = np.abs((residuals - np.mean(residuals)) / np.std(residuals))
     X_clean = X[z_scores <= threshold]
     y_clean = y[z_scores <= threshold]
     return X_clean, y_clean
-
-
-def mean_features(df, path_save_file, start_col):
-    """
-    :param df: File csv cần tính trung bình phổ
-    :param path_save_file: Đường dẫn lưu file
-    :param start_col: cột bắt đầu bước sóng
-    :return: Trả về dataframe đã tính trung bình
-    example:
-            def df_mean_features(df_mean, start_col):
-            df_mean = mean_features(df_mean, path_save_file=r'D:\Luan Van\Data\Final_Data\mean_features.csv',
-                                    start_col=start_col)
-            list_features = df_mean.iloc[:0, 2:]
-            features_mean = [f'{e}' for e in list_features]
-            X_mean = df_mean[features_mean]
-            y_mean = df_mean['Brix']
-            return X_mean, y_mean, features_mean
-
-    Tính bước sóng trung bình dùng để cho bộ dữ liệu ngẫu nhiên đo 3 điểm, cần lấy dữ liệu phổ trung bình
-    """
-    list_features = df.iloc[:0, start_col:]
-    features = [f'{e}' for e in list_features]
-    df_num = df[df['Number'] == 1]
-    df_num = df_num[df_num['Point'] == 1]
-    Features_col_all = pd.DataFrame()
-    for p in df_num['Position']:
-        df_A = df[df['Position'] == p]
-        df_A1 = df_A[df_A['Point'] == 1]
-        list_all = []
-        Brix = []
-        for b in df_A1['Brix']:
-            Brix.append(b)
-        Brix_col = pd.DataFrame(np.array(Brix))
-        num_list = []
-        for a in df_A1['Number']:
-            num_list.append(a)
-            df_N = df[df['Number'] == a]
-            df_N = df_N[df_N['Position'] == 'A']
-            mean = 0
-            list_mean = []
-            for i in features:
-                for j in df_N[i].values:
-                    mean = j + mean
-                mean = mean / 3
-                list_mean.append(mean)
-                mean = 0
-            list_all.append(list_mean)
-            list_mean = []
-        Features_col = pd.DataFrame(np.array(list_all), columns=features)
-        Features_col.insert(loc=0, column='Brix', value=Brix_col)
-        Features_col.insert(loc=0, column='Number', value=pd.DataFrame(np.array(num_list)))
-        Features_col_all = pd.DataFrame(Features_col_all).append([Features_col])
-        Features_col = pd.DataFrame()
-        Features_col_all.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
-    return Features_col_all

@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.cross_decomposition import PLSRegression
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor, AdaBoostRegressor
 from sklearn.linear_model import Ridge, LinearRegression, Lasso
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neighbors import KNeighborsRegressor
@@ -8,7 +8,6 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 import xgboost as xgb
-
 
 """
     Tổng hợp các model sử dụng grid_search, các parameter đã tham khảo tài liệu và lựa chọn tối ưu
@@ -30,12 +29,13 @@ def Gridsearch_ann(X, y):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     param_grid_ann = {
-        'hidden_layer_sizes': [(16, 16), (32, 32), (64, 64)],
+        'hidden_layer_sizes': [(16, 16), (32, 16), (64, 16), (16, 32), (32, 32), (64, 32),
+                               (16, 64), (32, 64), (64, 64)],
         'alpha': [0.0001, 0.001, 0.01, 0.1, 1]
     }
     ann = MLPRegressor(random_state=42, early_stopping=False)
     grid_search_ann = GridSearchCV(estimator=ann, param_grid=param_grid_ann, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
 
     grid_search_ann.fit(X, y)
     return grid_search_ann
@@ -53,7 +53,7 @@ def Gridsearch_rf(X, y):
     }
     rf = RandomForestRegressor(random_state=42, bootstrap=True)
     grid_search_rf = GridSearchCV(estimator=rf, param_grid=param_grid_rf, cv=k_fold, verbose=0, n_jobs=-1,
-                                  scoring='r2')
+                                  scoring='neg_mean_squared_error')
     grid_search_rf.fit(X, y)
     return grid_search_rf
 
@@ -71,7 +71,7 @@ def Gridsearch_svr(X, y):
     }
     svr = SVR(kernel='rbf', gamma='scale', shrinking=True)
     grid_search_svr = GridSearchCV(estimator=svr, param_grid=param_grid_svr, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
     grid_search_svr.fit(X, y)
     return grid_search_svr
 
@@ -87,7 +87,7 @@ def Gridsearch_r(X, y):
     }
     rd = Ridge()
     grid_search_r = GridSearchCV(estimator=rd, param_grid=param_grid_r, cv=k_fold, verbose=0, n_jobs=-1,
-                                 scoring='r2')
+                                 scoring='neg_mean_squared_error')
     grid_search_r.fit(X, y)
     return grid_search_r
 
@@ -103,7 +103,7 @@ def Gridsearch_l(X, y):
     }
     ls = Lasso(tol=1e-2)
     grid_search_l = GridSearchCV(estimator=ls, param_grid=param_grid_l, cv=k_fold, verbose=0, n_jobs=-1,
-                                 scoring='r2')
+                                 scoring='neg_mean_squared_error')
     grid_search_l.fit(X, y)
     return grid_search_l
 
@@ -120,7 +120,7 @@ def Gridsearch_knn(X, y):
     }
     knn = KNeighborsRegressor(algorithm='auto')
     grid_search_knn = GridSearchCV(estimator=knn, param_grid=param_grid_knn, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
     grid_search_knn.fit(X, y)
     return grid_search_knn
 
@@ -136,7 +136,7 @@ def Gridsearch_dt(X, y):
     }
     dt = DecisionTreeRegressor()
     grid_search_dt = GridSearchCV(estimator=dt, param_grid=param_grid_dt, cv=k_fold, verbose=0, n_jobs=-1,
-                                  scoring='r2')
+                                  scoring='neg_mean_squared_error')
     grid_search_dt.fit(X, y)
     return grid_search_dt
 
@@ -157,7 +157,7 @@ def Gridsearch_pls(X, y, features):
     }
     pls = PLSRegression()
     grid_search_pls = GridSearchCV(estimator=pls, param_grid=param_grid_pls, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
     grid_search_pls.fit(X, y)
     return grid_search_pls
 
@@ -174,7 +174,7 @@ def Gridsearch_xgb(X, y):
     }
     XGB = xgb.XGBRegressor()
     grid_search_XGB = GridSearchCV(estimator=XGB, param_grid=param_grid_XGB, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
     grid_search_XGB.fit(X, y)
     return grid_search_XGB
 
@@ -191,7 +191,7 @@ def Gridsearch_gbr(X, y):
     }
     gbr = GradientBoostingRegressor(random_state=42)
     grid_search_gbr = GridSearchCV(estimator=gbr, param_grid=param_grid_gbr, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
     grid_search_gbr.fit(X, y)
     return grid_search_gbr
 
@@ -207,7 +207,7 @@ def Gridsearch_lr(X, y):
     }
     lr = LinearRegression()
     grid_search_lr = GridSearchCV(estimator=lr, param_grid=param_grid_lr, cv=k_fold, verbose=0, n_jobs=-1,
-                                  scoring='r2')
+                                  scoring='neg_mean_squared_error')
     grid_search_lr.fit(X, y)
     return grid_search_lr
 
@@ -224,6 +224,22 @@ def Gridsearch_etr(X, y):
     }
     etr = ExtraTreesRegressor(random_state=42)
     grid_search_etr = GridSearchCV(estimator=etr, param_grid=param_grid_etr, cv=k_fold, verbose=0, n_jobs=-1,
-                                   scoring='r2')
+                                   scoring='neg_mean_squared_error')
     grid_search_etr.fit(X, y)
     return grid_search_etr
+
+
+def Gridsearch_adb(X, y):
+    """
+    :param X: Nhập X để tìm tham số tối ưu thường là X_train hoặc X_val
+    :param y: Nhập y để tìm tham số tối ưu thường là y_train hoặc y_val
+    :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
+    """
+    param_grid_adb = {
+        'n_estimators': np.arange(10, 200, 10),
+    }
+    adb = AdaBoostRegressor(random_state=42)
+    grid_search_adb = GridSearchCV(estimator=adb, param_grid=param_grid_adb, cv=k_fold, verbose=0, n_jobs=-1,
+                                   scoring='neg_mean_squared_error')
+    grid_search_adb.fit(X, y)
+    return grid_search_adb

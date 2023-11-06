@@ -1,14 +1,19 @@
 import math
+import time
+
 import numpy as np
+import pandas as pd
 from kennard_stone import train_test_split
 from matplotlib import pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from Helper.Drand_k_pca import k_pca_reduce
-from Helper.Drand_preprocessing import preprocessing_data, msc_data
+from Helper.Drand_preprocessing import preprocessing_data, msc_data, remove_outliers_model
 
 
-def get_data_X_y(df_all, start_col):
+def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data=False):
     """
+    :param pick_features_data:
+    :param mean_features_data: Khi nhập vào data ngẫu nhiên mới cần mean_features và pick_one_features
     :param df_all: Nhập vào data file csv
     :param start_col: Nhập vào số thứ tự của cột bắt đầu bước sóng
     :return: Trả về 3 giá trị, X là giá trị dãy bước sóng, y là giá trị brix, features là sách bước sóng
@@ -19,6 +24,25 @@ def get_data_X_y(df_all, start_col):
     features_all = [f'{e}' for e in list_features]
     X_all = df_all[features_all]
     y_all = df_all['Brix']
+    if mean_features_data is True:
+        df_mean = mean_features(df_all, path_save_file=r'D:\Luan Van\Data\Final_Data\Random_mean_measuring.csv',
+                                start_col=start_col)
+        list_features = df_mean.iloc[:0, 2:]
+        features_all = [f'{e}' for e in list_features]
+        X_all = df_mean[features_all]
+        y_all = df_mean['Brix']
+    else:
+        pass
+
+    if pick_features_data is True:
+        df_mean = pick_features(df_all, path_save_file=r'D:\Luan Van\Data\Final_Data\Random_pick_measuring.csv')
+        list_features = df_mean.iloc[:0, start_col:]
+        features_all = [f'{e}' for e in list_features]
+        X_all = df_mean[features_all]
+        y_all = df_mean['Brix']
+    else:
+        pass
+
     return X_all, y_all, features_all
 
 
@@ -53,6 +77,9 @@ def reduce_kernel_pca(X_fit, X_transform_1, X_transform_2, y_fit, features_col, 
     :param features_col: Số lượng cột ở tệp X
     :param kernel_pca: Chọn xem có cần giảm chiều không
     :return: Các dữ liệu đã Kernel PCA hoặc không
+    example: Reduce Features Data
+        self.X_train, self.X_val, self.X_test = reduce_kernel_pca(self.X_train, self.X_val, self.X_test, self.y_train,
+                                                                  features_col=features, kernel_pca=kernel_pca)
     """
     if kernel_pca is True:
         k_pca = k_pca_reduce(X_fit, y_fit, features=features_col)
@@ -69,7 +96,7 @@ def warning(model_regression):
     :param model_regression: Đưa vào tên model để check xem model này đã có trong bộ dữ liệu model không
     :return: In ra các thông báo để kiểm tra
     """
-    list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS", "GBR", "KNN", "DT", "LR", "ETR"]
+    list_model = ["SVR", "RF", "Stacking", "ANN", "R", "L", "XGB", "PLS", "GBR", "KNN", "DT", "LR", "ETR", "ADB"]
     cnt = 0
     for model in list_model:
         cnt += 1
@@ -85,8 +112,11 @@ def warning(model_regression):
 
 def print_best_params(list_model):
     """
-    :param list_model: Dãy model
+    :param list_model: Dãy model đã được chạy gridsearch
     :return: In ra các parameter tốt nhất theo tiêu chí R Square
+    example: '''Print Best parameter'''
+                print_best_params([best_model_etr, best_model_r, best_model_xgb,
+                                   best_model_pls, best_model_svr])
     """
     for model in list_model:
         try:
@@ -100,6 +130,13 @@ def print_score(y_actual, y_predicted):
     :param y_actual: Nhập y_data từ dãy X_data đã dự đoán
     :param y_predicted: Nhập y_pred
     :return: Trả về 4 đánh giá (R, R Square, R_MSE, MAE)
+    example: '''Accuracy score'''
+            print('--------------- TRAIN--------------------')
+            print_score(self.y_train, y_pred_train)
+            print('--------------- TEST--------------------')
+            score_test = print_score(self.y_test, y_pred_test)
+            Để lấy giá trị R, R_Squared, R_MSE, MAE thì chỉ cần thêm Score_test[0] (0-3)
+            tương ứng thứ tự của các giá trị
     """
     R = np.corrcoef(y_actual, y_predicted, rowvar=False)
     print('R:', "{:.3f}".format(R[0][1]))
@@ -118,6 +155,9 @@ def cal_rpd(actual_values, predictions):
     :param actual_values: Nhập vào giá trị y thực tế
     :param predictions: Nhập vào giá trị y dự đoán
     :return: Trả về kết quả RPD
+    example: print('--------------- RPD--------------------')
+            RPD_Test = cal_rpd(self.y_test, y_pred_test)
+            print('RPD:', "{:.2f}".format(RPD_Test))
     """
     sd_actual = np.std(actual_values)
     error = (predictions - actual_values)
@@ -134,6 +174,8 @@ def load_spectrum(y_actual, y_pred, name_model, score_test):
     :param name_model: Tên cho biểu đồ
     :param score_test: score_test là lấy giá trị R_Square của test để tính độ tin cậy và xuất trên biểu đồ
     :return: Không trả về biến nào
+    example: '''Plot Regression'''
+            load_spectrum(self.y_test, y_pred_test, name_model=self.name_model, score_test=score_test)
     """
     plt.scatter(y_actual, y_pred, label='Data')
     plt.xlabel('Actual Response')
@@ -144,3 +186,71 @@ def load_spectrum(y_actual, y_pred, name_model, score_test):
     plt.plot(y_actual, trend_pls, 'r', label='Line pred')
     plt.plot(y_actual, y_actual, color='green', linestyle='--', linewidth=1, label="Line fit")
     plt.show()
+
+
+def mean_features(df, path_save_file, start_col):
+    """
+    :param df: File csv cần tính trung bình phổ
+    :param path_save_file: Đường dẫn lưu file
+    :param start_col: cột bắt đầu bước sóng
+    :return: Trả về dataframe đã tính trung bình
+    example:
+            def df_mean_features(df_mean, start_col):
+            df_mean = mean_features(df_mean, path_save_file=r'D:\Luan Van\Data\Final_Data\mean_features.csv',
+                                    start_col=start_col)
+            list_features = df_mean.iloc[:0, 2:]
+            features_mean = [f'{e}' for e in list_features]
+            X_mean = df_mean[features_mean]
+            y_mean = df_mean['Brix']
+            return X_mean, y_mean, features_mean
+
+    Tính bước sóng trung bình dùng để cho bộ dữ liệu ngẫu nhiên đo 3 điểm, cần lấy dữ liệu phổ trung bình
+    """
+    list_features = df.iloc[:0, start_col:]
+    features = [f'{e}' for e in list_features]
+    df_num = df[df['Number'] == 1]
+    df_num = df_num[df_num['Point'] == 1]
+    Features_col_all = pd.DataFrame()
+    for p in df_num['Area']:
+        df_A = df[df['Area'] == p]
+        df_A1 = df_A[df_A['Point'] == 1]
+        list_all = []
+        Brix = []
+        for b in df_A1['Brix']:
+            Brix.append(b)
+        Brix_col = pd.DataFrame(np.array(Brix))
+        num_list = []
+        for a in df_A1['Number']:
+            num_list.append(a)
+            df_N = df[df['Number'] == a]
+            df_N = df_N[df_N['Area'] == 'A']
+            mean = 0
+            list_mean = []
+            for i in features:
+                for j in df_N[i].values:
+                    mean = j + mean
+                mean = mean / len(df_N[i].values)
+                list_mean.append(mean)
+                mean = 0
+            list_all.append(list_mean)
+            list_mean = []
+        Features_col = pd.DataFrame(np.array(list_all), columns=features)
+        Features_col.insert(loc=0, column='Brix', value=Brix_col)
+        Features_col.insert(loc=0, column='Number', value=pd.DataFrame(np.array(num_list)))
+        Features_col_all = pd.DataFrame(Features_col_all).append([Features_col])
+        Features_col = pd.DataFrame()
+        Features_col_all.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
+    return Features_col_all
+
+
+def pick_features(data, path_save_file, col_pick=1):
+    """
+    :param data: Nhập vào file data cần chọn bước sóng
+    :param path_save_file: Nơi lưu file data sau khi chọn
+    :param col_pick: Đối tượng được chọn
+    :return: Trả về X, y, và dãy bước sóng
+    example:
+    """
+    data = data[data['Point'] == col_pick]
+    data.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
+    return data
