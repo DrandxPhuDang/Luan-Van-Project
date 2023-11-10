@@ -5,28 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c2364b5-5b3a-4b59-b1fb-45c81f63ad85" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Data/Demo_Data/DATA_03112023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Data_Random/Random - 03-11-2023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Data_Random/Random - 26-10-2023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Know_measuring.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Random_Mean_measuring.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Random_Pick_measuring.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Random_measuring.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/Stacking_regression.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/Support Vector_regression.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/note.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Data/train_test/test.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Data/train_test/train.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Data/train_test/val.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Launcher.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/Background.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Excel/Final_Data_Excel.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Final_All.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Final_All_Data - 26-10-2023.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Final_All_Data - add.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helper/Drand_grid_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_grid_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Random_Pick_measuring.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Final_Data/Random_Pick_measuring.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/spectrum/Mean Spectrum .png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/spectrum/Spectrum .png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/train_test/Xtest.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/train_test/Xtrain.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/train_test/ytest.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/train_test/ytrain.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Helper/Drand_k_pca.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_k_pca.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helper/Drand_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_preprocessing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helper/Drand_started_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_started_helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Training_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Training_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_sensor/Calibsignal_data_calibration drand.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Stacking_regression.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/model/Stacking_regression.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/note.py" beforeDir="false" afterPath="$PROJECT_DIR$/note.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -306,6 +304,17 @@
       <workItem from="1699058867592" duration="4800000" />
       <workItem from="1699091823425" duration="37658000" />
       <workItem from="1699250349420" duration="31601000" />
+      <workItem from="1699316784338" duration="14780000" />
+      <workItem from="1699415630606" duration="2607000" />
+      <workItem from="1699426175409" duration="2516000" />
+      <workItem from="1699451877492" duration="5594000" />
+      <workItem from="1699491580895" duration="3363000" />
+      <workItem from="1699517814529" duration="544000" />
+      <workItem from="1699540205327" duration="42000" />
+      <workItem from="1699591987858" duration="58000" />
+      <workItem from="1699592238489" duration="86000" />
+      <workItem from="1699592509684" duration="57000" />
+      <workItem from="1699622910866" duration="939000" />
     </task>
     <servers />
   </component>
@@ -372,7 +381,7 @@
     <SUITE FILE_PATH="coverage/PLS_regression_py$PLS_regression.coverage" NAME="PLS regression Coverage Results" MODIFIED="1695109904376" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Full_Code_V2_py$note_2.coverage" NAME="note 2 Coverage Results" MODIFIED="1698560511519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/random_forest_regression_py$Kennardstone.coverage" NAME="Kennardstone Coverage Results" MODIFIED="1695012559110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Main_py$note.coverage" NAME="note Coverage Results" MODIFIED="1699287169329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Main_py$note.coverage" NAME="note Coverage Results" MODIFIED="1699351366819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Main_py$Drand_k_pca.coverage" NAME="Drand_k_pca Coverage Results" MODIFIED="1698835955975" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Helper" />
     <SUITE FILE_PATH="coverage/Main_py$threatingpython.coverage" NAME="threatingpython Coverage Results" MODIFIED="1698766172471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Python/CUSTOMDATA" />
     <SUITE FILE_PATH="coverage/Full_code_py$Doctests_in_random_forest_regression.coverage" NAME="Doctests in random forest regression Coverage Results" MODIFIED="1696550198479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -388,6 +397,7 @@
     <SUITE FILE_PATH="coverage/data_excel_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1694418551610" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/optimization_tutorial_regression_ipynb$Full_Code_V2.coverage" NAME="Full Code V2 Coverage Results" MODIFIED="1698487234455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Full_Code_V2_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1697124190066" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Drand_preprocessing_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1699456850061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1690357227526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Train_Test_Split_py$Kennardstone.coverage" NAME="Kennardstone Coverage Results" MODIFIED="1694965705496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/calib_data_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1695346433281" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -403,6 +413,7 @@
     <SUITE FILE_PATH="coverage/Note_py$Train_Test_Split.coverage" NAME="Train Test Split Coverage Results" MODIFIED="1689346862278" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_2_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1695227828896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/optimization_tutorial_regression_ipynb$note.coverage" NAME="note Coverage Results" MODIFIED="1698488570600" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Main_py$Launcher.coverage" NAME="Launcher Coverage Results" MODIFIED="1699623825667" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_2_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1695213776892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PLS_regression_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695116148052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_2_py$random_forest_regression.coverage" NAME="random forest regression Coverage Results" MODIFIED="1695213642179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -410,13 +421,13 @@
     <SUITE FILE_PATH="coverage/Full_Code_V2_py$calib_data.coverage" NAME="calib_data Coverage Results" MODIFIED="1697515784302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Full_Code_V2_py$Spectrum_Plot.coverage" NAME="Spectrum_Plot Coverage Results" MODIFIED="1698230067797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_2_py$Note.coverage" NAME="Note Coverage Results" MODIFIED="1695215431325" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Main_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1699286973618" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Main_py$Main.coverage" NAME="Main Coverage Results" MODIFIED="1699592024474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_py$.coverage" NAME=" Coverage Results" MODIFIED="1695186755756" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Full_code_py$Full_code.coverage" NAME="Full_code Coverage Results" MODIFIED="1697017399654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Note_2_py$linear_regression.coverage" NAME="linear regression Coverage Results" MODIFIED="1695227359491" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Export_Data_py$Training_model.coverage" NAME="Training_model Coverage Results" MODIFIED="1697988031315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Train_Test_Split_py$Train_Test_Split.coverage" NAME="Train Test Split Coverage Results" MODIFIED="1694965726165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Main_py$Training_model.coverage" NAME="Training_model Coverage Results" MODIFIED="1699108171568" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Main_py$Training_model.coverage" NAME="Training_model Coverage Results" MODIFIED="1699345012511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/data_excel_py$Note_2.coverage" NAME="Note_2 Coverage Results" MODIFIED="1694418759863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/note_train_test_py$Kennardstone.coverage" NAME="Kennardstone Coverage Results" MODIFIED="1694766314798" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Export_Data_py$Full_Code_V2.coverage" NAME="Full Code V2 Coverage Results" MODIFIED="1697998583593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

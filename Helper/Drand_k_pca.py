@@ -22,7 +22,7 @@ def k_pca_reduce(X, y, features):
     ])
     param_grid = {
         'k_pca__n_components': np.arange(1, len(features), 1),
-        # 'k_pca__n_components': [104],
+        # 'k_pca__n_components': [23],
         'k_pca__kernel': ['linear', 'rbf', 'sigmoid']
     }
     grid_search = GridSearchCV(pipeline, param_grid, cv=10, verbose=0)

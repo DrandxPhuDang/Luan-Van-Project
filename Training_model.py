@@ -1,3 +1,5 @@
+import time
+
 import joblib
 from sklearn.ensemble import StackingRegressor
 from sklearn.preprocessing import StandardScaler
@@ -18,13 +20,14 @@ class Regression_predict:
         # df_1 = df[df['Position'] == 'Mid of Segments']
         # df_2 = df[df['Position'] == 'Mid of 2 Segments']
 
-        X, y, features = get_data_X_y(df, start_col=start_col_X, mean_features_data=False, pick_features_data=False)
+        X, y, features = get_data_X_y(df, start_col=start_col_X, mean_features_data=True, pick_features_data=False)
         # X, y, features = get_data_X_y(df_1, start_col=start_col_X, mean_features_data=False, pick_features_data=True)
         # X, y, features = get_data_X_y(df_2, start_col=start_col_X, mean_features_data=False, pick_features_data=True)
 
         """ Preprocessing Data """
         self.X_train, self.X_val, self.X_test, \
-            self.y_train, self.y_val, self.y_test = train_test_split_kennard_stone(X, y, test_size, prepro_data)
+            self.y_train, self.y_val, self.y_test = train_test_split_kennard_stone(X, y, test_size,
+                                                                                   prepro_data, features)
 
         # self.X_train, self.y_train = remove_outliers_model(self.X_train, self.y_train)
 

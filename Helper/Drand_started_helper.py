@@ -46,8 +46,9 @@ def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data
     return X_all, y_all, features_all
 
 
-def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data):
+def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data, features):
     """
+    :param features:
     :param X_data: Nhập vào X data
     :param y_data: Nhập vào y data
     :param test_size: Chọn test_size
@@ -65,6 +66,19 @@ def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data):
     if prepro_data is False:
         X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=test_size)
         X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
+
+    def save_train_test():
+        train_all = pd.concat([pd.DataFrame(np.array(y_train), columns=['Brix']),
+                               pd.DataFrame(np.array(X_train), columns=features)], axis=1)
+        test_all = pd.concat([pd.DataFrame(np.array(y_test), columns=['Brix']),
+                              pd.DataFrame(np.array(X_test), columns=features)], axis=1)
+        val_all = pd.concat([pd.DataFrame(np.array(y_val), columns=['Brix']),
+                             pd.DataFrame(np.array(X_val), columns=features)], axis=1)
+        train_all.to_csv(r'D:\Luan Van\Data\train_test\train.csv', index=False, header=True, na_rep='Unknown')
+        test_all.to_csv(r'D:\Luan Van\Data\train_test\test.csv', index=False, header=True, na_rep='Unknown')
+        val_all.to_csv(r'D:\Luan Van\Data\train_test\val.csv', index=False, header=True, na_rep='Unknown')
+    save_train_test()
+
     return X_train, X_val, X_test, y_train, y_val, y_test
 
 
@@ -208,6 +222,7 @@ def mean_features(df, path_save_file, start_col):
     """
     list_features = df.iloc[:0, start_col:]
     features = [f'{e}' for e in list_features]
+    # df = df[df['Area'] == 'A']
     df_num = df[df['Number'] == 1]
     df_num = df_num[df_num['Point'] == 1]
     Features_col_all = pd.DataFrame()
@@ -233,12 +248,10 @@ def mean_features(df, path_save_file, start_col):
                 list_mean.append(mean)
                 mean = 0
             list_all.append(list_mean)
-            list_mean = []
         Features_col = pd.DataFrame(np.array(list_all), columns=features)
         Features_col.insert(loc=0, column='Brix', value=Brix_col)
         Features_col.insert(loc=0, column='Number', value=pd.DataFrame(np.array(num_list)))
         Features_col_all = pd.DataFrame(Features_col_all).append([Features_col])
-        Features_col = pd.DataFrame()
         Features_col_all.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
     return Features_col_all
 
