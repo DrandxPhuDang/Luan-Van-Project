@@ -1,5 +1,3 @@
-import time
-
 import joblib
 from sklearn.ensemble import StackingRegressor
 from sklearn.preprocessing import StandardScaler
@@ -10,7 +8,7 @@ from Helper.Drand_started_helper import *
 
 class Regression_predict:
 
-    def __init__(self, path_file_data, start_col_X, model_regression='PLS', test_size=0.2, save_model=False,
+    def __init__(self, path_file_data, start_col=12, model_regression='PLS', test_size=0.2, save_model=False,
                  find_best_parameter=False, prepro_data=False, kernel_pca=False):
         super().__init__()
 
@@ -20,7 +18,7 @@ class Regression_predict:
         # df_1 = df[df['Position'] == 'Mid of Segments']
         # df_2 = df[df['Position'] == 'Mid of 2 Segments']
 
-        X, y, features = get_data_X_y(df, start_col=start_col_X, mean_features_data=True, pick_features_data=False)
+        X, y, features = get_data_X_y(df, start_col=start_col, mean_features_data=False, pick_features_data=False)
         # X, y, features = get_data_X_y(df_1, start_col=start_col_X, mean_features_data=False, pick_features_data=True)
         # X, y, features = get_data_X_y(df_2, start_col=start_col_X, mean_features_data=False, pick_features_data=True)
 
@@ -28,8 +26,6 @@ class Regression_predict:
         self.X_train, self.X_val, self.X_test, \
             self.y_train, self.y_val, self.y_test = train_test_split_kennard_stone(X, y, test_size,
                                                                                    prepro_data, features)
-
-        # self.X_train, self.y_train = remove_outliers_model(self.X_train, self.y_train)
 
         """ Reduce Features Data """
         self.X_train, self.X_val, self.X_test = reduce_kernel_pca(self.X_train, self.X_val, self.X_test, self.y_train,
@@ -255,15 +251,12 @@ class Regression_predict:
                 '''Grid Search'''
                 best_model_svr = Gridsearch_svr(self.X_val, self.y_val)
                 best_model_etr = Gridsearch_etr(self.X_val, self.y_val)
-                # best_model_knn = Gridsearch_knn(self.X_val, self.y_val)
-                # best_model_lr = Gridsearch_lr(self.X_val, self.y_val)
                 best_model_r = Gridsearch_r(self.X_val, self.y_val)
-                # best_model_l = Gridsearch_l(self.X_val, self.y_val)
                 best_model_pls = Gridsearch_pls(self.X_val, self.y_val, features=pd.DataFrame(self.X_train).iloc[0, 0:])
                 best_model_xgb = Gridsearch_xgb(self.X_val, self.y_val)
                 '''Print Best parameter'''
-                # print_best_params([best_model_etr, best_model_r, best_model_xgb,
-                #                    best_model_pls, best_model_svr])
+                print_best_params([best_model_etr, best_model_r, best_model_xgb,
+                                   best_model_pls, best_model_svr])
                 '''Fitting model'''
                 base_models = [
                     ('etr', best_model_etr.best_estimator_),
@@ -290,6 +283,8 @@ class Regression_predict:
 
         # ---------------------------------------------- Predicted Values ----------------------------------------------
         '''Predicted Values'''
+        # self.X_train, self.y_train = remove_outliers_model(self.X_train, self.y_train)
+        # self.X_test, self.y_test = remove_outliers_model(self.X_test, self.y_test)
         y_pred_test = self.model.predict(self.X_test)
         y_pred_train = self.model.predict(self.X_train)
 
@@ -303,12 +298,19 @@ class Regression_predict:
         RPD_Test = cal_rpd(self.y_test, y_pred_test)
         print('RPD:', "{:.2f}".format(RPD_Test))
 
-        # ------------------------------------------------ Saving Model ------------------------------------------------
+        # ---------------------------------------------- Auto Saving Model ---------------------------------------------
         if score_test[1] >= 0.80 or save_model is True:
             joblib.dump(self.model, fr'model\{self.name_model}_regression.pkl')
         else:
             pass
 
-        # ------------------------------------------------ Load Spectrum -----------------------------------------------
+        # ---------------------------------------------- Brix Distribution ---------------------------------------------
+        '''Plot Brix Distribution'''
+        plot_brix(y)
+
+        # ------------------------------------------------ Spectrum -----------------------------------------------
         '''Plot Regression'''
-        load_spectrum(self.y_test, y_pred_test, name_model=self.name_model, score_test=score_test)
+        plot_spectrum(self.y_test, y_pred_test, name_model=self.name_model, score_test=score_test)
+
+        # ------------------------------------------------ Spectrum -----------------------------------------------
+        plt.show()

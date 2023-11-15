@@ -7,7 +7,7 @@ from sklearn.svm import SVR
 
 def k_pca_reduce(X, y, features):
     """
-    :param X: Nhập nên là X_train để giảm chiều (nên dùng fit_transform cho train_data và transform cho test_data
+    :param X: Nhập nên là X_train để giảm chiều (nên dùng fit_transform cho train_data và transform cho test_data)
     :param y: Nhập nên là y_train để giảm chiều (không cần fit_transform hay transform cho y_train)
     :param features: Nhập tất cả cột của X_data
     :return: trả về model tối ưu

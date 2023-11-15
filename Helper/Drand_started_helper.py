@@ -1,13 +1,11 @@
 import math
-import time
-
 import numpy as np
 import pandas as pd
 from kennard_stone import train_test_split
 from matplotlib import pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from Helper.Drand_k_pca import k_pca_reduce
-from Helper.Drand_preprocessing import preprocessing_data, msc_data, remove_outliers_model
+from Helper.Drand_preprocessing import preprocessing_data
 
 
 def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data=False):
@@ -16,18 +14,22 @@ def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data
     :param mean_features_data: Khi nhập vào data ngẫu nhiên mới cần mean_features và pick_one_features
     :param df_all: Nhập vào data file csv
     :param start_col: Nhập vào số thứ tự của cột bắt đầu bước sóng
-    :return: Trả về 3 giá trị, X là giá trị dãy bước sóng, y là giá trị brix, features là sách bước sóng
+    :return: Trả về 3 giá trị, X là giá trị dãy bước sóng, y là giá trị brix, features là giá trị bước sóng
     example: df = pd.read_csv(path_file_data)
              X, y, features = get_data_X_y(df, start_col=start_col_X)
     """
-    list_features = df_all.iloc[:0, start_col:]
-    features_all = [f'{e}' for e in list_features]
-    X_all = df_all[features_all]
-    y_all = df_all['Brix']
+    X_all = pd.DataFrame()
+    y_all = pd.DataFrame()
+    features_all = pd.DataFrame()
+    if (mean_features_data is False) & (pick_features_data is False):
+        list_features = df_all.iloc[:0, start_col:]
+        features_all = [f'{e}' for e in list_features]
+        X_all = df_all[features_all]
+        y_all = df_all['Brix']
     if mean_features_data is True:
         df_mean = mean_features(df_all, path_save_file=r'D:\Luan Van\Data\Final_Data\Random_mean_measuring.csv',
                                 start_col=start_col)
-        list_features = df_mean.iloc[:0, 2:]
+        list_features = df_mean.iloc[:0, 4:]
         features_all = [f'{e}' for e in list_features]
         X_all = df_mean[features_all]
         y_all = df_mean['Brix']
@@ -58,7 +60,12 @@ def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data, featu
     example; self.X_train, self.X_val, self.X_test, \
             self.y_train, self.y_val, self.y_test = train_test_split_kennard_stone(X, y, test_size, prepro_data)
     """
-    global X_train, X_test, X_val, y_train, y_val, y_test
+    X_train = pd.DataFrame()
+    X_test = pd.DataFrame()
+    X_val = pd.DataFrame()
+    y_train = pd.DataFrame()
+    y_val = pd.DataFrame()
+    y_test = pd.DataFrame()
     if prepro_data is True:
         X_data = preprocessing_data(X_data)
         X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=test_size)
@@ -77,6 +84,7 @@ def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data, featu
         train_all.to_csv(r'D:\Luan Van\Data\train_test\train.csv', index=False, header=True, na_rep='Unknown')
         test_all.to_csv(r'D:\Luan Van\Data\train_test\test.csv', index=False, header=True, na_rep='Unknown')
         val_all.to_csv(r'D:\Luan Van\Data\train_test\val.csv', index=False, header=True, na_rep='Unknown')
+
     save_train_test()
 
     return X_train, X_val, X_test, y_train, y_val, y_test
@@ -173,6 +181,8 @@ def cal_rpd(actual_values, predictions):
             RPD_Test = cal_rpd(self.y_test, y_pred_test)
             print('RPD:', "{:.2f}".format(RPD_Test))
     """
+    actual_values = np.ravel(actual_values)
+    predictions = np.ravel(predictions)
     sd_actual = np.std(actual_values)
     error = (predictions - actual_values)
     bias = np.mean(predictions - actual_values)
@@ -181,7 +191,7 @@ def cal_rpd(actual_values, predictions):
     return rpd
 
 
-def load_spectrum(y_actual, y_pred, name_model, score_test):
+def plot_spectrum(y_actual, y_pred, name_model, score_test):
     """
     :param y_actual: Nhập y_data từ dãy X_data đã dự đoán
     :param y_pred: Nhập y_pred
@@ -191,6 +201,7 @@ def load_spectrum(y_actual, y_pred, name_model, score_test):
     example: '''Plot Regression'''
             load_spectrum(self.y_test, y_pred_test, name_model=self.name_model, score_test=score_test)
     """
+    plt.figure(num=1)
     plt.scatter(y_actual, y_pred, label='Data')
     plt.xlabel('Actual Response')
     plt.ylabel('Predicted Response')
@@ -199,60 +210,94 @@ def load_spectrum(y_actual, y_pred, name_model, score_test):
     trend_pls = np.polyval(reg_pls, y_actual)
     plt.plot(y_actual, trend_pls, 'r', label='Line pred')
     plt.plot(y_actual, y_actual, color='green', linestyle='--', linewidth=1, label="Line fit")
-    plt.show()
+
+
+def plot_brix(data, bins=20):
+    """
+    :param data: Dữ liệu cần vẽ sự phân bố
+    :param bins: Độ rộng của trục số lượng dữ liệu
+    :return: Hiển thị biểu đồ histogram
+    """
+    plt.figure(num=2)
+    plt.hist(data, bins=bins, edgecolor='black')
+    plt.title('Brix Distribution')
+    plt.xlabel('Brix')
+    plt.ylabel('Frequency')
 
 
 def mean_features(df, path_save_file, start_col):
     """
-    :param df: File csv cần tính trung bình phổ
-    :param path_save_file: Đường dẫn lưu file
-    :param start_col: cột bắt đầu bước sóng
-    :return: Trả về dataframe đã tính trung bình
-    example:
-            def df_mean_features(df_mean, start_col):
-            df_mean = mean_features(df_mean, path_save_file=r'D:\Luan Van\Data\Final_Data\mean_features.csv',
-                                    start_col=start_col)
-            list_features = df_mean.iloc[:0, 2:]
-            features_mean = [f'{e}' for e in list_features]
-            X_mean = df_mean[features_mean]
-            y_mean = df_mean['Brix']
-            return X_mean, y_mean, features_mean
-
-    Tính bước sóng trung bình dùng để cho bộ dữ liệu ngẫu nhiên đo 3 điểm, cần lấy dữ liệu phổ trung bình
+    :param df: file data csv đo ngẫu nhiên
+    :param path_save_file: địa chỉ lưu file
+    :param start_col: số cột bắt đầu
+    :return: data frame đã tính trung bình phổ 3 điểm
     """
+
+    # ----------------- get number -----------------------
+    def get_number(data):
+        data_area = data[data['Area'] == 'A']
+        data_point = data_area[data_area['Point'] == 1]
+        data_number = data_point['Number']
+        return data_number
+
+    # ----------------- get area -----------------------
+    def get_area(number):
+        data_number = df[df['Number'] == number]
+        data_point = data_number[data_number['Point'] == 1]
+        data_area = data_point['Area']
+        return data_area
+
+    # ----------------- get brix -----------------------
+    def get_brix(data):
+        data_point = data[data['Point'] == 1]
+        data_brix = data_point['Brix']
+        return data_brix
+
+    def get_acid(data):
+        data_point = data[data['Point'] == 1]
+        data_acid = data_point['Acid']
+        return data_acid
+
+    def get_ratio(data):
+        data_point = data[data['Point'] == 1]
+        data_ratio = data_point['Ratio']
+        return data_ratio
+
     list_features = df.iloc[:0, start_col:]
     features = [f'{e}' for e in list_features]
-    # df = df[df['Area'] == 'A']
-    df_num = df[df['Number'] == 1]
-    df_num = df_num[df_num['Point'] == 1]
     Features_col_all = pd.DataFrame()
-    for p in df_num['Area']:
-        df_A = df[df['Area'] == p]
-        df_A1 = df_A[df_A['Point'] == 1]
+    List_number = []
+    for num in get_number(df):
         list_all = []
-        Brix = []
-        for b in df_A1['Brix']:
-            Brix.append(b)
-        Brix_col = pd.DataFrame(np.array(Brix))
-        num_list = []
-        for a in df_A1['Number']:
-            num_list.append(a)
-            df_N = df[df['Number'] == a]
-            df_N = df_N[df_N['Area'] == 'A']
-            mean = 0
+        for area in get_area(num):
+            List_number.append(num)
+            df_dt = df[df['Number'] == num]
+            df_dt = df_dt[df_dt['Area'] == area]
+            features_col = df_dt[features]
             list_mean = []
+            mean = 0
             for i in features:
-                for j in df_N[i].values:
+                for j in features_col[i].values:
                     mean = j + mean
-                mean = mean / len(df_N[i].values)
+                mean = mean / len(features_col[i].values)
                 list_mean.append(mean)
                 mean = 0
             list_all.append(list_mean)
         Features_col = pd.DataFrame(np.array(list_all), columns=features)
-        Features_col.insert(loc=0, column='Brix', value=Brix_col)
-        Features_col.insert(loc=0, column='Number', value=pd.DataFrame(np.array(num_list)))
         Features_col_all = pd.DataFrame(Features_col_all).append([Features_col])
-        Features_col_all.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
+
+    Features_col_all = Features_col_all.reset_index(drop=True)
+    df_brix = get_brix(df).reset_index(drop=True)
+    df_acid = get_acid(df).reset_index(drop=True)
+    df_ratio = get_ratio(df).reset_index(drop=True)
+    df_number = pd.DataFrame(np.array(List_number), columns=['Number']).reset_index(drop=True)
+
+    Features_col_all = pd.concat([df_ratio, Features_col_all], axis=1)
+    Features_col_all = pd.concat([df_acid, Features_col_all], axis=1)
+    Features_col_all = pd.concat([df_brix, Features_col_all], axis=1)
+    Features_col_all = pd.concat([df_number, Features_col_all], axis=1)
+    Features_col_all.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
+
     return Features_col_all
 
 

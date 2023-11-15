@@ -7,7 +7,7 @@ from Export_Calibration import Export_calib
 # Running Program
 if __name__ == "__main__":
     '''Define'''
-    Path_File_Data = r'D:\Luan Van\Data\Final_Data\Random_measuring.csv'
+    Path_File_Data = r'D:\Luan Van\Data\Final_Data\Know_measuring.csv'
     # Path_File_Data = r'D:\Luan Van\Data\Final_Data\Random_measuring.csv'
 
     # ----------------------------------------------- Export Data CSV ------------------------------------------------
@@ -47,9 +47,9 @@ if __name__ == "__main__":
     ],
     '''
 
-    Regression_predict(path_file_data=Path_File_Data, start_col_X=13, test_size=0.2,
+    Regression_predict(path_file_data=Path_File_Data, start_col=12, test_size=0.2,
                        model_regression='Stacking', prepro_data=True,
-                       find_best_parameter=False, kernel_pca=False, save_model=False)
+                       find_best_parameter=True, kernel_pca=False, save_model=False)
 
     # ----------------------------------------------- Spectrum Plot ----------------------------------------------------
     Path_save_spectrum = r"D:\Luan Van\Data\spectrum"
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     [path_file_data, start_col(start column of wavelength), path_save_spectrum, save_or_none]
     '''
 
-    # Spectrum_plot(path_file_data=Path_File_Data, start_col=14, path_save_spectrum=Path_save_spectrum,
+    # Spectrum_plot(path_file_data=Path_File_Data, start_col=13, path_save_spectrum=Path_save_spectrum,
     #               save_or_none="Save")
 
     # ----------------------------------------------- Export Calibration -----------------------------------------------

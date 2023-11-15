@@ -4,7 +4,7 @@ import pandas as pd
 
 
 class Export_Data:
-    def __init__(self, file_name, path_folder_sensor, path_save, path_calib_file, list_column, Cultivar_name):
+    def __init__(self, file_name, path_folder_sensor, path_save, path_calib_file, list_column, cultivar_name):
         super().__init__()
         self.path_folder = fr'{path_folder_sensor}'
         self.path_folder_save = fr'{path_save}'
@@ -29,7 +29,7 @@ class Export_Data:
 
         def Change_shape(data):
             """
-            :param data: Chuyển đổi shape của giá trị từ dọc thành ngang
+            :param data: Chunky đổi shape của giá trị từ dọc thành ngang
             :return: trả về dataframe chứa các giá trị đã chuyển
             """
             file = pd.DataFrame()
@@ -115,7 +115,7 @@ class Export_Data:
                     break
                 dem += 1
 
-            self.final_Data.insert(loc=0, column=f'{Cultivar_name}', value=Cultivar)
+            self.final_Data.insert(loc=0, column=f'{cultivar_name}', value=Cultivar)
             self.final_Data.to_csv(self.path_save_file, index=False, header=True, na_rep='Unknown')
 
             print(f'Successful export data excel to {self.path_folder_save}')
