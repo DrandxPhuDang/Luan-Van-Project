@@ -24,7 +24,7 @@ class Export_Data:
             df = pd.DataFrame()
             for f in name_csv:
                 data = pd.read_csv(f, skiprows=[i for i in range(0, 21)])
-                df = df.append(data)
+                df = df._append(data)
             return name_csv, df
 
         def Change_shape(data):
@@ -37,7 +37,7 @@ class Export_Data:
             srange = range(0, len(data['Sample Signal (unitless)']), 228)
             for ii in srange:
                 i += 228
-                file = file.append(data.iloc[ii:i, 3], ignore_index=True)
+                file = file._append(data.iloc[ii:i, 3], ignore_index=True)
             return file
 
         def Reference(calib_data, signal_data):
@@ -57,7 +57,7 @@ class Export_Data:
                     bien_dem = bien_dem + 1
                 bien_dem = 0
                 values_calib = pd.DataFrame(values_calib).T
-                values_calib_2 = pd.DataFrame(values_calib_2).append([values_calib])
+                values_calib_2 = pd.DataFrame(values_calib_2)._append([values_calib])
                 values_calib = []
             return values_calib_2
 

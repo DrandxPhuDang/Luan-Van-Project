@@ -37,7 +37,8 @@ def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data
         pass
 
     if pick_features_data is True:
-        df_mean = pick_features(df_all, path_save_file=r'D:\Luan Van\Data\Final_Data\Random_pick_measuring.csv')
+        pick_features(df_all, path_save_file=r'D:\Luan Van\Data\Final_Data\Random_pick_measuring.csv')
+        df_mean = pd.read_csv(r'D:\Luan Van\Data\Final_Data\Random_pick_measuring.csv')
         list_features = df_mean.iloc[:0, start_col:]
         features_all = [f'{e}' for e in list_features]
         X_all = df_mean[features_all]
@@ -75,16 +76,18 @@ def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data, featu
         X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
 
     def save_train_test():
+        all_data = pd.concat([pd.DataFrame(np.array(y_data), columns=['Brix']),
+                              pd.DataFrame(np.array(X_data), columns=features)], axis=1)
         train_all = pd.concat([pd.DataFrame(np.array(y_train), columns=['Brix']),
                                pd.DataFrame(np.array(X_train), columns=features)], axis=1)
         test_all = pd.concat([pd.DataFrame(np.array(y_test), columns=['Brix']),
                               pd.DataFrame(np.array(X_test), columns=features)], axis=1)
         val_all = pd.concat([pd.DataFrame(np.array(y_val), columns=['Brix']),
                              pd.DataFrame(np.array(X_val), columns=features)], axis=1)
+        all_data.to_csv(r'D:\Luan Van\Data\train_test\all.csv', index=False, header=True, na_rep='Unknown')
         train_all.to_csv(r'D:\Luan Van\Data\train_test\train.csv', index=False, header=True, na_rep='Unknown')
         test_all.to_csv(r'D:\Luan Van\Data\train_test\test.csv', index=False, header=True, na_rep='Unknown')
         val_all.to_csv(r'D:\Luan Van\Data\train_test\val.csv', index=False, header=True, na_rep='Unknown')
-
     save_train_test()
 
     return X_train, X_val, X_test, y_train, y_val, y_test
@@ -284,7 +287,7 @@ def mean_features(df, path_save_file, start_col):
                 mean = 0
             list_all.append(list_mean)
         Features_col = pd.DataFrame(np.array(list_all), columns=features)
-        Features_col_all = pd.DataFrame(Features_col_all).append([Features_col])
+        Features_col_all = pd.DataFrame(Features_col_all)._append([Features_col])
 
     Features_col_all = Features_col_all.reset_index(drop=True)
     df_brix = get_brix(df).reset_index(drop=True)
@@ -309,6 +312,6 @@ def pick_features(data, path_save_file, col_pick=1):
     :return: Trả về X, y, và dãy bước sóng
     example:
     """
-    data = data[data['Point'] == col_pick]
-    data.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
-    return data
+    data_pick = data[data['Point'] == col_pick]
+    data_pick.to_csv(path_save_file, index=False, header=True, na_rep='Unknown')
+    return data_pick

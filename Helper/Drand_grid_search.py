@@ -150,7 +150,7 @@ def Gridsearch_pls(X, y, features):
     :return: Trả về model (chọn tham số tối ưu, hoặc model chứa tham số tối ưu)
     """
     list_len_features = []
-    for value in range(1, len(features)):
+    for value in range(1, len(features)+1):
         list_len_features.append(value)
     param_grid_pls = {
         'n_components': list_len_features

@@ -7,20 +7,20 @@ from Export_Calibration import Export_calib
 # Running Program
 if __name__ == "__main__":
     '''Define'''
-    Path_File_Data = r'D:\Luan Van\Data\Final_Data\Know_measuring.csv'
+    Path_File_Data = r'D:\Luan Van\Data\Final_Data\Random_measuring1.csv'
     # Path_File_Data = r'D:\Luan Van\Data\Final_Data\Random_measuring.csv'
 
     # ----------------------------------------------- Export Data CSV ------------------------------------------------
-    path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration.csv'
-    folder_sensor = r'D:\Luan Van\data_sensor\2023-11-03'
+    path_calib = r'D:\Luan Van\Data\Calib\final_data_calibration (25-10-2023).csv'
+    folder_sensor = r'D:\Luan Van\data_sensor\2023-10-16'
     path_folder_save = r'D:\Luan Van\Data\Demo_Data'
 
     ''' Parameter of Export_Data: 
     [file_name, path_folder_sensor, path_save, path_calib_file, list_column, Cultivar_name]
     '''
-    # #
-    # Export_Data(file_name='DATA_03112023', path_folder_sensor=folder_sensor, path_save=path_folder_save,
-    #             path_calib_file=path_calib, Cultivar_name='Cultivar',
+
+    # Export_Data(file_name='DATA_16102023', path_folder_sensor=folder_sensor, path_save=path_folder_save,
+    #             path_calib_file=path_calib, cultivar_name='Cultivar',
     #             list_column=['Ratio', 'Acid', 'Brix', 'Date', 'Point', 'Position', 'Number'])
 
     # ----------------------------------------------- Predicted Program ------------------------------------------------
@@ -33,7 +33,7 @@ if __name__ == "__main__":
             True, False
     ],
     find_best_parameter: [
-            None, Find
+            True, False
     ],
     kernel_pca: [
             True, False
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     ],
     '''
 
-    Regression_predict(path_file_data=Path_File_Data, start_col=12, test_size=0.2,
+    Regression_predict(path_file_data=Path_File_Data, start_col=13, test_size=0.2,
                        model_regression='Stacking', prepro_data=True,
                        find_best_parameter=True, kernel_pca=False, save_model=False)
 
@@ -57,9 +57,9 @@ if __name__ == "__main__":
     ''' Parameter of Spectrum_plot 
     [path_file_data, start_col(start column of wavelength), path_save_spectrum, save_or_none]
     '''
-
-    # Spectrum_plot(path_file_data=Path_File_Data, start_col=13, path_save_spectrum=Path_save_spectrum,
-    #               save_or_none="Save")
+    #
+    # Spectrum_plot(path_file_data=Path_File_Data, start_col=14, path_save_spectrum=Path_save_spectrum,
+    #               save_or_none="None")
 
     # ----------------------------------------------- Export Calibration -----------------------------------------------
 

@@ -23,7 +23,7 @@ def preprocessing_data(X_data, windows_len=21, polyorder=2, deriv=1):
     X_data = savgol_filter(X_data, windows_len, polyorder=polyorder, deriv=deriv)
     scaler_mm = MinMaxScaler()
     X_data = scaler_mm.fit_transform(X_data)
-    X_data = pd.DataFrame(X_data)
+    X_data = pd.DataFrame(np.array(X_data))
     return X_data
 
 

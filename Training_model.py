@@ -1,3 +1,5 @@
+import time
+
 import joblib
 from sklearn.ensemble import StackingRegressor
 from sklearn.preprocessing import StandardScaler
@@ -18,7 +20,7 @@ class Regression_predict:
         # df_1 = df[df['Position'] == 'Mid of Segments']
         # df_2 = df[df['Position'] == 'Mid of 2 Segments']
 
-        X, y, features = get_data_X_y(df, start_col=start_col, mean_features_data=False, pick_features_data=False)
+        X, y, features = get_data_X_y(df, start_col=start_col, mean_features_data=True, pick_features_data=False)
         # X, y, features = get_data_X_y(df_1, start_col=start_col_X, mean_features_data=False, pick_features_data=True)
         # X, y, features = get_data_X_y(df_2, start_col=start_col_X, mean_features_data=False, pick_features_data=True)
 
@@ -33,7 +35,7 @@ class Regression_predict:
 
         """ warming Model Input """
         warning(model_regression=model_regression)
-        # ---------------------------------------- ExtraTrees Regressor ------------------------------------------------
+        # ---------------------------------------- Adaboost Regressor --------------------------------------------------
         '''ExtraTrees Regression'''
         if model_regression == "ADB":
             self.name_model = 'AdaBoost'
@@ -283,18 +285,18 @@ class Regression_predict:
 
         # ---------------------------------------------- Predicted Values ----------------------------------------------
         '''Predicted Values'''
-        # self.X_train, self.y_train = remove_outliers_model(self.X_train, self.y_train)
-        # self.X_test, self.y_test = remove_outliers_model(self.X_test, self.y_test)
+        self.X_train, self.y_train = remove_outliers_model(self.X_train, self.y_train)
+        self.X_test, self.y_test = remove_outliers_model(self.X_test, self.y_test)
         y_pred_test = self.model.predict(self.X_test)
         y_pred_train = self.model.predict(self.X_train)
 
         # ------------------------------------------------ Print Score -------------------------------------------------
         '''Accuracy score'''
-        print('--------------- TRAIN--------------------')
+        print('--------------- TRAIN --------------------')
         print_score(self.y_train, y_pred_train)
-        print('--------------- TEST--------------------')
+        print('--------------- TEST --------------------')
         score_test = print_score(self.y_test, y_pred_test)
-        print('--------------- RPD--------------------')
+        print('--------------- RPD --------------------')
         RPD_Test = cal_rpd(self.y_test, y_pred_test)
         print('RPD:', "{:.2f}".format(RPD_Test))
 
@@ -308,9 +310,9 @@ class Regression_predict:
         '''Plot Brix Distribution'''
         plot_brix(y)
 
-        # ------------------------------------------------ Spectrum -----------------------------------------------
+        # ------------------------------------------------ Spectrum ----------------------------------------------------
         '''Plot Regression'''
         plot_spectrum(self.y_test, y_pred_test, name_model=self.name_model, score_test=score_test)
 
-        # ------------------------------------------------ Spectrum -----------------------------------------------
+        # ------------------------------------------------ Spectrum ----------------------------------------------------
         plt.show()
