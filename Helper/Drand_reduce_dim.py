@@ -1,8 +1,14 @@
 import numpy as np
+import pandas as pd
 from sklearn.decomposition import KernelPCA
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVR
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.manifold import Isomap
 
 
 def k_pca_reduce(X, y, features):
@@ -22,7 +28,7 @@ def k_pca_reduce(X, y, features):
     ])
     param_grid = {
         'k_pca__n_components': np.arange(1, len(features), 1),
-        # 'k_pca__n_components': [23],
+        # 'k_pca__n_components': [5],
         'k_pca__kernel': ['linear', 'rbf', 'sigmoid']
     }
     grid_search = GridSearchCV(pipeline, param_grid, cv=10, verbose=0)
@@ -32,3 +38,8 @@ def k_pca_reduce(X, y, features):
     print('Dimensions: ', grid_search.best_params_["k_pca__n_components"])
     print('Kernel: ', grid_search.best_params_["k_pca__kernel"])
     return k_pca
+
+
+def isomap_reduce():
+    isomap = Isomap(n_components=100)
+    return isomap

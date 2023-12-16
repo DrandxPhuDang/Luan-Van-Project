@@ -3,6 +3,7 @@ import pandas as pd
 from kennard_stone import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+from sklearn.ensemble import RandomForestRegressor
 
 
 def features_selection(data, start_col, model=LinearRegression()):
@@ -97,3 +98,17 @@ def features_selection(data, start_col, model=LinearRegression()):
     # check_test = df_test.iloc[:1, 2:]
 
     return df_score, Scores_train, Scores_test
+
+
+def wavelengths_features(X, y, n_estimators=100, threshold=0.01):
+    # Sử dụng Random Forest để lựa chọn đặc trưng
+    forest = RandomForestRegressor(n_estimators=100)
+    forest.fit(X, y)
+
+    important = forest.feature_importances_
+
+    # Lựa chọn các đặc trưng có độ quan trọng cao
+    threshold = 0.01  # Ngưỡng độ quan trọng để lựa chọn đặc trưng
+    selected_features = important > threshold
+    selected_X = X[:, selected_features]
+    return selected_X

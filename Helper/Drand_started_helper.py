@@ -4,12 +4,15 @@ import pandas as pd
 from kennard_stone import train_test_split
 from matplotlib import pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-from Helper.Drand_k_pca import k_pca_reduce
-from Helper.Drand_preprocessing import preprocessing_data
+from Helper.Drand_reduce_dim import *
+from Helper.Drand_preprocessing import *
+from sklearn.preprocessing import RobustScaler
+from Helper.Drand_features_seclection import *
 
 
-def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data=False):
+def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data=False, target='Brix'):
     """
+    :param target:
     :param pick_features_data:
     :param mean_features_data: Khi nhập vào data ngẫu nhiên mới cần mean_features và pick_one_features
     :param df_all: Nhập vào data file csv
@@ -25,14 +28,14 @@ def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data
         list_features = df_all.iloc[:0, start_col:]
         features_all = [f'{e}' for e in list_features]
         X_all = df_all[features_all]
-        y_all = df_all['Brix']
+        y_all = df_all[target]
     if mean_features_data is True:
         df_mean = mean_features(df_all, path_save_file=r'D:\Luan Van\Data\Final_Data\Random_mean_measuring.csv',
                                 start_col=start_col)
         list_features = df_mean.iloc[:0, 4:]
         features_all = [f'{e}' for e in list_features]
         X_all = df_mean[features_all]
-        y_all = df_mean['Brix']
+        y_all = df_mean[target]
     else:
         pass
 
@@ -42,7 +45,7 @@ def get_data_X_y(df_all, start_col, mean_features_data=False, pick_features_data
         list_features = df_mean.iloc[:0, start_col:]
         features_all = [f'{e}' for e in list_features]
         X_all = df_mean[features_all]
-        y_all = df_mean['Brix']
+        y_all = df_mean[target]
     else:
         pass
 
@@ -63,41 +66,41 @@ def train_test_split_kennard_stone(X_data, y_data, test_size, prepro_data, featu
     """
     X_train = pd.DataFrame()
     X_test = pd.DataFrame()
-    X_val = pd.DataFrame()
     y_train = pd.DataFrame()
-    y_val = pd.DataFrame()
     y_test = pd.DataFrame()
     if prepro_data is True:
         X_data = preprocessing_data(X_data)
+        # X_data = msc_data(X_data)
+        # X_data = snv_data(X_data)
+        """ Wavelengths Selection """
+        # X_data = wavelengths_features(X_data.values, y_data.values)
+        """ Reduce Diameter """
+        # reduce_model = k_pca_reduce(X_data, y_data, features=pd.DataFrame(np.array(X_data)).iloc[0, 0:])
+        # reduce_model = isomap_reduce()
+        # X_data = reduce_model.fit_transform(X_data)
         X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=test_size)
-        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
     if prepro_data is False:
         X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=test_size)
-        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
 
     def save_train_test():
         all_data = pd.concat([pd.DataFrame(np.array(y_data), columns=['Brix']),
-                              pd.DataFrame(np.array(X_data), columns=features)], axis=1)
+                              pd.DataFrame(np.array(X_data))], axis=1)
         train_all = pd.concat([pd.DataFrame(np.array(y_train), columns=['Brix']),
-                               pd.DataFrame(np.array(X_train), columns=features)], axis=1)
+                               pd.DataFrame(np.array(X_train))], axis=1)
         test_all = pd.concat([pd.DataFrame(np.array(y_test), columns=['Brix']),
-                              pd.DataFrame(np.array(X_test), columns=features)], axis=1)
-        val_all = pd.concat([pd.DataFrame(np.array(y_val), columns=['Brix']),
-                             pd.DataFrame(np.array(X_val), columns=features)], axis=1)
+                              pd.DataFrame(np.array(X_test))], axis=1)
         all_data.to_csv(r'D:\Luan Van\Data\train_test\all.csv', index=False, header=True, na_rep='Unknown')
         train_all.to_csv(r'D:\Luan Van\Data\train_test\train.csv', index=False, header=True, na_rep='Unknown')
         test_all.to_csv(r'D:\Luan Van\Data\train_test\test.csv', index=False, header=True, na_rep='Unknown')
-        val_all.to_csv(r'D:\Luan Van\Data\train_test\val.csv', index=False, header=True, na_rep='Unknown')
     save_train_test()
 
-    return X_train, X_val, X_test, y_train, y_val, y_test
+    return X_train, X_test, y_train, y_test
 
 
-def reduce_kernel_pca(X_fit, X_transform_1, X_transform_2, y_fit, features_col, kernel_pca):
+def reduce_kernel_pca(X_fit, y_fit, features_col, kernel_pca):
     """
     :param X_fit: Nhập vào X dùng để học dữ liệu giảm chiều (X_train)
     :param X_transform_1: Nhập vòa X cần transform theo dữ liệu tệp X_fit (X_val)
-    :param X_transform_2: Nhập vòa X cần transform theo dữ liệu tệp X_fit (X_test)
     :param y_fit: Chạy giảm chiều Kernnel PCA
     :param features_col: Số lượng cột ở tệp X
     :param kernel_pca: Chọn xem có cần giảm chiều không
@@ -107,13 +110,12 @@ def reduce_kernel_pca(X_fit, X_transform_1, X_transform_2, y_fit, features_col, 
                                                                   features_col=features, kernel_pca=kernel_pca)
     """
     if kernel_pca is True:
-        k_pca = k_pca_reduce(X_fit, y_fit, features=features_col)
-        X_fit = k_pca.fit_transform(X_fit)
-        X_transform_1 = k_pca.transform(X_transform_1)
-        X_transform_2 = k_pca.transform(X_transform_2)
+        reduce_model = k_pca_reduce(X_fit, y_fit, features=features_col)
+        # reduce_model = isomap_reduce()
+        X_fit = reduce_model.fit_transform(X_fit)
     if kernel_pca is False:
         pass
-    return X_fit, X_transform_1, X_transform_2
+    return X_fit
 
 
 def warning(model_regression):

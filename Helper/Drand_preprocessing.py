@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 from scipy.signal import savgol_filter
 from sklearn import preprocessing
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import *
 from sklearn.svm import SVR
 
 
-def preprocessing_data(X_data, windows_len=21, polyorder=2, deriv=1):
+def preprocessing_data(X_data, windows_length=35, polyorder=2, deriv=1):
     """
-    :param windows_len: Nhập vào size cửa sổ trượt
+    :param windows_length: Nhập vào size cửa sổ trượt (default = 21)
     :param deriv: Nhập vào thứ tự đạo hàm (default = 1)
     :param polyorder: Nhập vào bậc đa thức (default = 2)
     :param X_data: Nhập X_data cần tiền xử lí, nên dùng trước khi chia train_test
@@ -17,14 +17,29 @@ def preprocessing_data(X_data, windows_len=21, polyorder=2, deriv=1):
     """
     X_data = pd.DataFrame(X_data).dropna()
     X_data.fillna(X_data.mean(), inplace=True)
+    prepro_normal = preprocessing.Normalizer().fit(X_data)
+    X_data = prepro_normal.transform(X_data)
     X_data = preprocessing.normalize(X_data)
-    prepro_normal_train = preprocessing.Normalizer().fit(X_data)
-    X_data = prepro_normal_train.transform(X_data)
-    X_data = savgol_filter(X_data, windows_len, polyorder=polyorder, deriv=deriv)
+    X_data = savgol_filter(X_data, windows_length, polyorder=polyorder, deriv=deriv)
     scaler_mm = MinMaxScaler()
     X_data = scaler_mm.fit_transform(X_data)
     X_data = pd.DataFrame(np.array(X_data))
     return X_data
+
+
+def snv_data(input_data):
+    """
+    :param input_data:
+    :return:
+    """
+    input_array = input_data.values if isinstance(input_data, pd.DataFrame) else input_data
+    data_snv = np.zeros_like(input_array)
+    for i in range(data_snv.shape[0]):
+        progress = (i / data_snv.shape[0]) * 100
+        print(f"\rProgress: %.2f%% ({i}/{data_snv.shape[0]})" % progress, end="")
+        data_snv[i, :] = (input_array[i, :] - np.mean(input_array[i, :])) / np.std(input_array[i, :])
+    print("\n-----------------DONE-------------------")
+    return data_snv
 
 
 def msc_data(input_data):
@@ -80,7 +95,17 @@ def remove_outliers_iqr(data, threshold=2, start_col=9, list_col_drop=None):
     return data_clean
 
 
-def remove_outliers_model(X, y, threshold=2, epsilon=0.25, cache_size=50, C=5, kernel='rbf'):
+def remove_outliers_model(X, y, threshold=1, epsilon=0.5, cache_size=50, C=200, kernel='rbf'):
+    """
+    :param X:
+    :param y:
+    :param threshold:
+    :param epsilon:
+    :param cache_size:
+    :param C:
+    :param kernel:
+    :return:
+    """
     model = SVR(epsilon=epsilon, cache_size=cache_size, C=C, kernel=kernel)
     model.fit(X, y)
     y_pred = model.predict(X)
