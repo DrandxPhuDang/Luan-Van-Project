@@ -4,40 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c2364b5-5b3a-4b59-b1fb-45c81f63ad85" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Data/Demo_Data/DATA_01102023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Demo_Data/DATA_02102023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Demo_Data/DATA_30092023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Data B.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Final_Data/Data a.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Helper/Drand_reduce_dim.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_sensor/Brix_Acid 02-10-2023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_sensor/Brix_Acid 10-01-2023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_sensor/Brix_Acid 30-09-2023.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/PLS_regression.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/Ridge_regression.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/Stacking_regression.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/All.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Know_measuring.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Final_Data/Know_measuring.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Random_Mean_measuring.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Final_Data/Random_Mean_measuring.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Random_measuring.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Final_Data/Random_measuring.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Final_Data/Random_measuring1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/train_test/all.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/train_test/all.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/train_test/test.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/train_test/test.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/train_test/train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/train_test/train.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/train_test/val.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helper/Drand_features_seclection.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_features_seclection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helper/Drand_k_pca.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helper/Drand_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_preprocessing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helper/Drand_started_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helper/Drand_started_helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Training_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Training_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_sensor/Brix_Acid 02-10-2023.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_sensor/Brix_Acid 10-01-2023.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_sensor/Brix_Acid 30-09-2023.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/note.py" beforeDir="false" afterPath="$PROJECT_DIR$/note.py" afterDir="false" />
-    </list>
+    <list default="true" id="1c2364b5-5b3a-4b59-b1fb-45c81f63ad85" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
